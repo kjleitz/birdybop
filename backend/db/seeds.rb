@@ -7,12 +7,13 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 
 if Rails.env.development?
-  # User.create(username: "admin", password: "admin", role: :admin, about: "this guy's an admin")
-  # User.create(username: "mod1", password: "moderator", role: :moderator, about: "this guy's a mod")
-  # User.create(username: "mod2", password: "moderator", role: :moderator, about: "this guy's a mod")
-  # User.create(username: "mod3", password: "moderator", role: :moderator, about: "this guy's a mod")
-  # User.create(username: "user1", password: "peasant", role: :peasant, about: "this guy's a peasant")
-  # User.create(username: "user2", password: "peasant", role: :peasant, about: "this guy's a peasant")
-  # User.create(username: "user3", password: "peasant", role: :peasant, about: "this guy's a peasant")
-  system "rake db:fixtures:load" # I'm an asshole
+  record_counts = {
+    admin_user: 1,
+    mod_user: 3,
+    user: 9,
+  }
+
+  record_counts.each do |factory_name, record_count|
+    record_count.times { FactoryBot.create(factory_name) }
+  end
 end

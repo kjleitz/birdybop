@@ -47,3 +47,8 @@ You will be prompted for a password and password confirmation; enter `birdybop` 
 rake db:setup
 ```
 
+## TODO
+
+### voting weight
+
+- voting weight should be inversely proportional to the number of accounts associated with the same IP address

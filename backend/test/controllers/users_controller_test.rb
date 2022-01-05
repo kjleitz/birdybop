@@ -72,7 +72,7 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
 
     response_json = JSON.parse(response.body)
     assert_predicate(response_json["errors"], :present?)
-    assert_predicate(response_json["errors"]["username"], :present?)
+    assert_predicate(response_json["errors"].count, :positive?)
   end
 
   test "should update user with a password change if the old password was supplied correctly" do

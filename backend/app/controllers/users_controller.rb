@@ -16,22 +16,24 @@ class UsersController < ApplicationController
     user = User.new(user_params_with_password)
 
     if user.save
-      render json: user, status: :created, location: user
+      new_access_token = log_in_user(user)
+      user_data = UserSerializer.new(user).as_json
+      full_data = user_data.merge({ access_token: new_access_token })
+      render json: full_data, status: :created, location: user
     else
-      render json: { errors: user.errors }, status: :unprocessable_entity
+      render_errors user
     end
   end
 
   # PATCH/PUT /users/1
   def update
     user = User.find(params[:id])
-
-    render status: :unauthorized and return if changing_password? && !user.authenticate(old_password)
+    render_unauthorized and return if changing_password? && !user.authenticate(old_password)
 
     if user.update(changing_password? ? user_params_with_password : user_params)
       render json: user
     else
-      render json: { errors: user.errors }, status: :unprocessable_entity
+      render_errors user
     end
   end
 
@@ -42,7 +44,7 @@ class UsersController < ApplicationController
     if user.destroy
       render status: :no_content
     else
-      render json: { errors: user.errors }, status: :unprocessable_entity
+      render_errors user
     end
   end
 
