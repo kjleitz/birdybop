@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+wikipedia:
+  name: Wikipedia
+  description: The Free Encyclopedia
+  path: wikipedia.org
+  submitter: user1
+  karma_cache: 0
+
+reddit:
+  name: Reddit
+  description: The Front Page of the Internet
+  path: reddit.com
+  submitter: user2
+  karma_cache: 0

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_01_05_175324) do
+ActiveRecord::Schema.define(version: 2022_01_07_225836) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -43,6 +43,56 @@ ActiveRecord::Schema.define(version: 2022_01_05_175324) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "comment_votes", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "comment_id", null: false
+    t.boolean "upvote", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["comment_id", "user_id"], name: "index_comment_votes_on_comment_id_and_user_id", unique: true
+    t.index ["comment_id"], name: "index_comment_votes_on_comment_id"
+    t.index ["user_id", "comment_id"], name: "index_comment_votes_on_user_id_and_comment_id", unique: true
+    t.index ["user_id"], name: "index_comment_votes_on_user_id"
+  end
+
+  create_table "comments", force: :cascade do |t|
+    t.text "body", null: false
+    t.integer "section", null: false
+    t.bigint "author_id"
+    t.bigint "parent_id"
+    t.bigint "source_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.integer "karma", default: 0
+    t.index ["author_id"], name: "index_comments_on_author_id"
+    t.index ["parent_id"], name: "index_comments_on_parent_id"
+    t.index ["source_id"], name: "index_comments_on_source_id"
+  end
+
+  create_table "source_votes", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "source_id", null: false
+    t.boolean "upvote", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["source_id", "user_id"], name: "index_source_votes_on_source_id_and_user_id", unique: true
+    t.index ["source_id"], name: "index_source_votes_on_source_id"
+    t.index ["user_id", "source_id"], name: "index_source_votes_on_user_id_and_source_id", unique: true
+    t.index ["user_id"], name: "index_source_votes_on_user_id"
+  end
+
+  create_table "sources", force: :cascade do |t|
+    t.string "path", null: false
+    t.bigint "submitter_id"
+    t.integer "karma", default: 0
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "name", null: false
+    t.text "description", default: ""
+    t.index ["path"], name: "index_sources_on_path", unique: true
+    t.index ["submitter_id"], name: "index_sources_on_submitter_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "username"
     t.string "password_digest"
@@ -55,4 +105,12 @@ ActiveRecord::Schema.define(version: 2022_01_05_175324) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "comment_votes", "comments"
+  add_foreign_key "comment_votes", "users"
+  add_foreign_key "comments", "comments", column: "parent_id"
+  add_foreign_key "comments", "sources"
+  add_foreign_key "comments", "users", column: "author_id", on_delete: :nullify
+  add_foreign_key "source_votes", "sources"
+  add_foreign_key "source_votes", "users"
+  add_foreign_key "sources", "users", column: "submitter_id", on_delete: :nullify
 end

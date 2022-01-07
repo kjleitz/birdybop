@@ -1,19 +1,23 @@
 class UsersController < ApplicationController
+  before_action :require_authentication, except: [:index, :show]
+
   # GET /users
   def index
-    users = User.all
+    users = policy_scope(User.all)
     render json: users
   end
 
   # GET /users/1
   def show
     user = User.find(params[:id])
+    authorize(user)
     render json: user
   end
 
   # POST /users
   def create
     user = User.new(user_params_with_password)
+    authorize(user)
 
     if user.save
       new_access_token = log_in_user(user)
@@ -28,6 +32,7 @@ class UsersController < ApplicationController
   # PATCH/PUT /users/1
   def update
     user = User.find(params[:id])
+    authorize(user)
     render_unauthorized and return if changing_password? && !user.authenticate(old_password)
 
     if user.update(changing_password? ? user_params_with_password : user_params)
@@ -40,6 +45,7 @@ class UsersController < ApplicationController
   # DELETE /users/1
   def destroy
     user = User.find(params[:id])
+    authorize(user)
 
     if user.destroy
       render status: :no_content

@@ -108,6 +108,8 @@ GEM
       slop (~> 3.0)
     puma (5.5.2)
       nio4r (~> 2.0)
+    pundit (2.1.1)
+      activesupport (>= 3.0.0)
     racc (1.6.0)
     rack (2.2.3)
     rack-cors (1.1.1)
@@ -184,6 +186,7 @@ DEPENDENCIES
   pry
   pry-remote
   puma (~> 5.0)
+  pundit (~> 2.1)
   rack-cors
   rails (~> 7.0)
   redis (~> 4.0)
