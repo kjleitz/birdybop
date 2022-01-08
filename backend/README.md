@@ -52,3 +52,4 @@ rake db:setup
 ### voting weight
 
 - voting weight should be inversely proportional to the number of accounts associated with the same IP address
+- literally everything else

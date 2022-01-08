@@ -23,6 +23,16 @@ jobs:
         shell: bash
         working-directory: ./backend
 
+    services:
+      postgres:
+        image: postgres:latest
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_USER: birdybop
+          POSTGRES_PASSWORD: birdybop
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
     strategy:
       matrix:
         ruby-version:
@@ -43,8 +53,14 @@ jobs:
       - name: Install dependencies
         run: bundle install
 
+      # - name: Create database user
+      #   run: createuser -s birdybop
+
+      - name: Set up the database
+        run: bundle exec rake db:setup
+
       - name: Run Minitest tests
-        run: bundle exec rails test
+        run: bundle exec rails test -cv
 
       - name: Run RuboCop lints
         run: bundle exec rubocop
