@@ -18,10 +18,10 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    # defaults:
-    #   run:
-    #     shell: bash
-    #     working-directory: ./backend
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./backend
 
     services:
       postgres:
@@ -55,22 +55,14 @@ jobs:
           cache-version: 1
           working-directory: ./backend
 
-      ## Should be handled by the `ruby/setup-ruby@v1` step above.
-      # - name: Install dependencies
-      #   run: bundle install
-
       - name: Create the database
         run: bundle exec rake db:create
-        working-directory: ./backend
 
       - name: Load the database schema
         run: bundle exec rake db:schema:load
-        working-directory: ./backend
 
       - name: Run Minitest tests
         run: bundle exec rails test
-        working-directory: ./backend
 
       - name: Run RuboCop lints
         run: bundle exec rubocop --parallel
-        working-directory: ./backend
