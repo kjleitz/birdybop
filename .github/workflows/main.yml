@@ -53,11 +53,11 @@ jobs:
       - name: Install dependencies
         run: bundle install
 
-      # - name: Create database user
-      #   run: createuser -s birdybop
+      - name: Create the database
+        run: bundle exec rake db:create
 
-      - name: Set up the database
-        run: bundle exec rake db:setup
+      - name: Load the database schema
+        run: bundle exec rake db:schema:load
 
       - name: Run Minitest tests
         run: bundle exec rails test -cv
