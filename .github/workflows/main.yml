@@ -23,18 +23,18 @@ jobs:
         shell: bash
         working-directory: ./backend
 
-    services:
-      postgres:
-        image: postgres:alpine
-        ports:
-          - 5432:5432
-        env:
-          POSTGRES_USER: birdybop
-          POSTGRES_PASSWORD: birdybop
-        ## Health check just takes a while and doesn't seem necessary; reinstate
-        ## this if postgres fails to spin up in a reasonable time.
-        # options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
-        # options: --health-cmd pg_isready --health-interval 10ms --health-timeout 500ms --health-retries 15
+    # services:
+    #   postgres:
+    #     image: postgres:alpine
+    #     ports:
+    #       - 5432:5432
+    #     env:
+    #       POSTGRES_USER: birdybop
+    #       POSTGRES_PASSWORD: birdybop
+    #     ## Health check just takes a while and doesn't seem necessary; reinstate
+    #     ## this if postgres fails to spin up in a reasonable time.
+    #     # options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+    #     # options: --health-cmd pg_isready --health-interval 10ms --health-timeout 500ms --health-retries 15
 
     strategy:
       matrix:
@@ -55,14 +55,72 @@ jobs:
           cache-version: 1
           working-directory: ./backend
 
+      # - name: Create the database
+      #   run: bundle exec rake db:create
+
+      # - name: Load the database schema
+      #   run: bundle exec rake db:schema:load
+
+      # - name: Run Minitest tests
+      #   run: bundle exec rails test
+
+      # - name: Run RuboCop lints
+      #   run: bundle exec rubocop --parallel
+
+  database:
+    needs: backend
+
+    name: Set up the database
+
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./backend
+
+    services:
+      postgres:
+        image: postgres:alpine
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_USER: birdybop
+          POSTGRES_PASSWORD: birdybop
+        ## Health check just takes a while and doesn't seem necessary; reinstate
+        ## this if postgres fails to spin up in a reasonable time.
+        # options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+        # options: --health-cmd pg_isready --health-interval 10ms --health-timeout 500ms --health-retries 15
+
+    steps:
       - name: Create the database
         run: bundle exec rake db:create
 
       - name: Load the database schema
         run: bundle exec rake db:schema:load
 
+  tests:
+    needs: database
+
+    name: Run Minitest
+
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./backend
+
+    steps:
       - name: Run Minitest tests
         run: bundle exec rails test
 
+  lint:
+    needs: backend
+
+    name: Run Rubocop
+
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./backend
+
+    steps:
       - name: Run RuboCop lints
         run: bundle exec rubocop --parallel
