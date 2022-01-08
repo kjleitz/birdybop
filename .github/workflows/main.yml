@@ -13,10 +13,15 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
-    name: Run RSpec tests and RuboCop lints
+  backend:
+    name: Run Minitest tests and RuboCop lints
 
     runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./backend
 
     strategy:
       matrix:
