@@ -55,6 +55,9 @@ jobs:
           cache-version: 1
           working-directory: ./backend
 
+      - name: Run RuboCop lints
+        run: bundle exec rubocop --parallel
+
       - name: Create the database
         run: bundle exec rake db:create
 
@@ -63,6 +66,3 @@ jobs:
 
       - name: Run Minitest tests
         run: bundle exec rails test
-
-      - name: Run RuboCop lints
-        run: bundle exec rubocop --parallel
