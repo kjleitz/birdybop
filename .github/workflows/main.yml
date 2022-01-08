@@ -72,6 +72,8 @@ jobs:
 
     name: Set up the database
 
+    runs-on: ubuntu-latest
+
     defaults:
       run:
         shell: bash
@@ -102,6 +104,8 @@ jobs:
 
     name: Run Minitest
 
+    runs-on: ubuntu-latest
+
     defaults:
       run:
         shell: bash
@@ -115,6 +119,8 @@ jobs:
     needs: backend
 
     name: Run Rubocop
+
+    runs-on: ubuntu-latest
 
     defaults:
       run:
