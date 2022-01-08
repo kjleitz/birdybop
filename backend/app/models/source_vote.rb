@@ -9,7 +9,9 @@ class SourceVote < ApplicationRecord
   scope :upvotes, -> { where(upvote: true) }
   scope :downvotes, -> { where(upvote: false) }
 
-  after_commit :update_karma!, on: :create
+  after_commit :create_karma!, on: :create
+  after_commit :update_karma!, on: :update
+  after_commit :destroy_karma!, on: :destroy
 
   def downvote?
     !upvote?
@@ -21,11 +23,30 @@ class SourceVote < ApplicationRecord
 
   private
 
-  def update_karma!
+  def create_karma!
     if upvote?
       Source.increment_counter(:karma, source_id)
     else
       Source.decrement_counter(:karma, source_id)
+    end
+  end
+
+  def update_karma!
+    old_state, new_state = saved_changes["upvote"] || []
+    return if old_state == new_state
+
+    if new_state
+      2.times { Source.increment_counter(:karma, source_id) }
+    else
+      2.times { Source.decrement_counter(:karma, source_id) }
+    end
+  end
+
+  def destroy_karma!
+    if upvote?
+      Source.decrement_counter(:karma, source_id)
+    else
+      Source.increment_counter(:karma, source_id)
     end
   end
 end

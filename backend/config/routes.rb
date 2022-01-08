@@ -8,6 +8,18 @@ Rails.application.routes.draw do
   resources :users
 
   resources :sources do
-    resources :comments, shallow: true
+    resources :source_votes, only: [:create] do
+      collection do
+        delete :destroy
+      end
+    end
+
+    resources :comments, shallow: true do
+      resources :comment_votes, only: [:create] do
+        collection do
+          delete :destroy
+        end
+      end
+    end
   end
 end

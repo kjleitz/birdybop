@@ -5,11 +5,11 @@ wikipedia:
   description: The Free Encyclopedia
   path: wikipedia.org
   submitter: user1
-  karma_cache: 0
+  karma: 0
 
 reddit:
   name: Reddit
   description: The Front Page of the Internet
   path: reddit.com
   submitter: user2
-  karma_cache: 0
+  karma: 0

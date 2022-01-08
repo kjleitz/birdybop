@@ -4,14 +4,14 @@ class UsersController < ApplicationController
   # GET /users
   def index
     users = policy_scope(User.all)
-    render json: users
+    render json: UserSerializer.new(users, is_collection: true).as_json
   end
 
   # GET /users/1
   def show
     user = User.find(params[:id])
     authorize(user)
-    render json: user
+    render json: UserSerializer.new(user).as_json
   end
 
   # POST /users
@@ -36,7 +36,7 @@ class UsersController < ApplicationController
     render_unauthorized and return if changing_password? && !user.authenticate(old_password)
 
     if user.update(changing_password? ? user_params_with_password : user_params)
-      render json: user
+      render json: UserSerializer.new(user).as_json
     else
       render_errors user
     end

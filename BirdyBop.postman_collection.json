@@ -1,0 +1,82 @@
+{
+	"variables": [],
+	"info": {
+		"name": "BirdyBop",
+		"_postman_id": "929d9d99-f128-98ee-8b2a-c00901fb0c18",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Log in",
+			"request": {
+				"url": "",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Log in as peasant",
+			"request": {
+				"url": "http://localhost:3000/sessions",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"user\": {\n\t\t\"username\": \"peasant_user_1\",\n\t\t\"password\": \"password123\"\n\t}\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Log in as admin",
+			"request": {
+				"url": "http://localhost:3000/sessions",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"user\": {\n\t\t\"username\": \"admin_user_1\",\n\t\t\"password\": \"password123\"\n\t}\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Log in as mod",
+			"request": {
+				"url": "http://localhost:3000/sessions",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"user\": {\n\t\t\"username\": \"mod_user_1\",\n\t\t\"password\": \"password123\"\n\t}\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

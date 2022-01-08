@@ -5,6 +5,7 @@ class ApplicationController < ActionController::API
   after_action :verify_policy_scoped, only: :index
 
   rescue_from Pundit::NotAuthorizedError, with: :pundit_not_authorized
+  rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
   # Sets a new refresh token for the user on the session, then returns a new
   # access token. This is what you should use to generate new access tokens.
@@ -39,7 +40,7 @@ class ApplicationController < ActionController::API
     session[:refresh_token] || ""
   end
 
-  def render_errors(errors, status = :unprocessable_entity)
+  def render_errors(errors, status = :unprocessable_entity, **additional_json)
     error_messages = case errors
     when Array then errors
     when nil then ["Something went wrong"]
@@ -48,7 +49,14 @@ class ApplicationController < ActionController::API
     else [errors]
     end
 
-    render json: { errors: error_messages }, status: status
+    render(
+      status: status,
+      json: {
+        status: numeric_status_code_from_symbol(status),
+        errors: error_messages,
+        error: human_status_code_from_symbol(status),
+      }.merge(additional_json),
+    )
   end
 
   def render_unauthorized(error = "Invalid credentials")
@@ -59,10 +67,26 @@ class ApplicationController < ActionController::API
     render_errors(error, :forbidden)
   end
 
+  def render_not_found(error = "Not Found")
+    render_errors(error, :not_found)
+  end
+
   protected
 
   def require_authentication
     render_unauthorized("Authentication required to perform this action") unless logged_in?
+  end
+
+  def numeric_status_code_from_symbol(status_symbol)
+    Rack::Utils::SYMBOL_TO_STATUS_CODE[status_symbol.to_sym]
+  end
+
+  def human_status_code_from_numeric(status_code)
+    Rack::Utils::HTTP_STATUS_CODES[status_code.to_i]
+  end
+
+  def human_status_code_from_symbol(status_symbol)
+    human_status_code_from_numeric(numeric_status_code_from_symbol(status_symbol))
   end
 
   private
@@ -77,5 +101,18 @@ class ApplicationController < ActionController::API
 
   def pundit_not_authorized(_exception)
     render_forbidden
+  end
+
+  def record_not_found(exception)
+    if Rails.env.production?
+      render_errors("Not Found", :not_found)
+    else
+      render_errors(
+        "Not Found",
+        :not_found,
+        exception: exception,
+        traces: ActionDispatch::ExceptionWrapper.new(nil, exception).traces,
+      )
+    end
   end
 end

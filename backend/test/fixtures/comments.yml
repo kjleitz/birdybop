@@ -5,18 +5,18 @@ one:
   author: user1
   body: This is a great source
   section: <%= Comment.sections[:discussion] %>
-  karma_cache: 0
+  karma: 0
 
 two:
   source: wikipedia
   author: user2
   body: No it isn't
   section: <%= Comment.sections[:discussion] %>
-  karma_cache: 0
+  karma: 0
 
 three:
   source: reddit
   author: user3
   body: Stay away from the darker areas
   section: <%= Comment.sections[:warnings] %>
-  karma_cache: 0
+  karma: 0
