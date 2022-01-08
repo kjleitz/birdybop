@@ -53,6 +53,7 @@ jobs:
           ruby-version: ${{ matrix.ruby-version }}
           bundler-cache: true
           cache-version: 1
+          working-directory: ./backend
 
       ## Should be handled by the `ruby/setup-ruby@v1` step above.
       # - name: Install dependencies
