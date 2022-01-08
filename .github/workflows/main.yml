@@ -25,13 +25,16 @@ jobs:
 
     services:
       postgres:
-        image: postgres:latest
+        image: postgres:alpine
         ports:
           - 5432:5432
         env:
           POSTGRES_USER: birdybop
           POSTGRES_PASSWORD: birdybop
-        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+        ## Health check just takes a while and doesn't seem necessary; reinstate
+        ## this if postgres fails to spin up in a reasonable time.
+        # options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+        # options: --health-cmd pg_isready --health-interval 10ms --health-timeout 500ms --health-retries 15
 
     strategy:
       matrix:
@@ -49,9 +52,11 @@ jobs:
         with:
           ruby-version: ${{ matrix.ruby-version }}
           bundler-cache: true
+          cache-version: 1
 
-      - name: Install dependencies
-        run: bundle install
+      ## Should be handled by the `ruby/setup-ruby@v1` step above.
+      # - name: Install dependencies
+      #   run: bundle install
 
       - name: Create the database
         run: bundle exec rake db:create
@@ -63,4 +68,4 @@ jobs:
         run: bundle exec rails test -cv
 
       - name: Run RuboCop lints
-        run: bundle exec rubocop
+        run: bundle exec rubocop --parallel
