@@ -1,4 +1,4 @@
-# birdybop backend
+# birdybop back end
 
 ## setup
 
@@ -14,7 +14,7 @@ Install Redis: https://redis.io/topics/quickstart#installing-redis
 
 Install RVM: https://rvm.io/
 
-### clone the project
+### clone the project and enter the `backend/` directory
 
 ```
 git clone git@github.com:kjleitz/birdybop.git
@@ -45,6 +45,26 @@ You will be prompted for a password and password confirmation; enter `birdybop` 
 
 ```
 rake db:setup
+```
+
+### run the server
+
+```
+rails s
+```
+
+(runs on port 3000 by default)
+
+### run tests
+
+```
+rails test
+```
+
+### run the linter
+
+```
+rubocop
 ```
 
 ## TODO
