@@ -98,6 +98,10 @@ jobs:
           cache: pnpm
           cache-dependency-path: ./frontend/pnpm-lock.yaml
 
+      # Shouldn't this be handled by the cache from `actions/setup-node`?
+      - name: Install dependencies
+        run: pnpm install
+
       - name: Run ESLint lints
         run: pnpm run lint
 
