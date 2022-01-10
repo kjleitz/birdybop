@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_01_07_225836) do
+ActiveRecord::Schema.define(version: 2022_01_09_190013) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -69,6 +69,15 @@ ActiveRecord::Schema.define(version: 2022_01_07_225836) do
     t.index ["source_id"], name: "index_comments_on_source_id"
   end
 
+  create_table "source_pages", force: :cascade do |t|
+    t.bigint "source_id", null: false
+    t.text "document", null: false
+    t.text "url", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["source_id"], name: "index_source_pages_on_source_id"
+  end
+
   create_table "source_votes", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "source_id", null: false
@@ -110,6 +119,7 @@ ActiveRecord::Schema.define(version: 2022_01_07_225836) do
   add_foreign_key "comments", "comments", column: "parent_id"
   add_foreign_key "comments", "sources"
   add_foreign_key "comments", "users", column: "author_id", on_delete: :nullify
+  add_foreign_key "source_pages", "sources"
   add_foreign_key "source_votes", "sources"
   add_foreign_key "source_votes", "users"
   add_foreign_key "sources", "users", column: "submitter_id", on_delete: :nullify

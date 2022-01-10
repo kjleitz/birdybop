@@ -14,6 +14,8 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :source_pages, shallow: true
+
     resources :comments, shallow: true do
       resources :comment_votes, only: [:create] do
         collection do
