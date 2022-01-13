@@ -1,7 +1,7 @@
 <template>
   <div class="home-view">
     <section class="birdybop-search">
-      <div class="logo">birdybop</div>
+      <h1 class="logo">birdybop</h1>
 
       <div class="search-area">
         <b-input-group size="lg">
@@ -17,6 +17,24 @@
         </b-input-group>
       </div>
     </section>
+    <!-- TODO: remove -->
+    <!-- TODO: remove -->
+    <!-- TODO: remove -->
+    <!-- TODO: remove -->
+    <!-- TODO: remove -->
+    <!-- TODO: remove -->
+    <!-- TODO: remove -->
+    <!-- TODO: remove -->
+    <!-- TODO: remove -->
+    <!-- TODO: remove -->
+    <!-- TODO: remove -->
+    <!-- TODO: remove -->
+    <!-- TODO: remove -->
+    <!-- TODO: remove -->
+    <!-- TODO: remove -->
+    <router-link :to="{ name: 'About' }">howdy</router-link>
+    <a href="/foobar123">this should 404</a>
+    <a href="https://www.example.com">external</a>
   </div>
 </template>
 
