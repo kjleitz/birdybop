@@ -1,18 +1,16 @@
 import SourcePage from "@/SourcePage";
 import { urlsFromPageLinks } from "@/utils/playwright-utils";
+import axios from "axios";
 import { Browser, chromium, Page } from "playwright";
-import * as solr from "solr-client";
 
 export default class Crawler {
   private baseUrl: string;
   private crawledUrls: Set<string> = new Set();
   private uncrawledUrls: Set<string> = new Set();
-  private db: solr.Client;
 
   constructor(baseUrl: string) {
     this.baseUrl = baseUrl;
     this.uncrawledUrls.add(this.baseUrl);
-    this.db = solr.createClient({ core: "source_pages" });
   }
 
   start(): Promise<void> {
@@ -20,7 +18,8 @@ export default class Crawler {
       return this.crawl(browser, this.baseUrl, (sourcePage) => {
         const solrDocument = SourcePage.solrFormat(sourcePage);
         console.log("adding", sourcePage.url);
-        return this.db.add(solrDocument).then(() => this.db.commit());
+        return axios.post("http://localhost:8000/source_pages", solrDocument)
+          .catch(reason => console.log(reason?.message || reason));
       }).then(() => browser.close());
     });
   }
