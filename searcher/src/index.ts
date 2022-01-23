@@ -46,14 +46,23 @@ app.post('/source_pages', (request, response) => {
 });
 
 app.get('/source_pages', (request, response) => {
+  // all right, come on, you know better
+  response.header("Access-Control-Allow-Origin", "*");
+
   const q = `text_t:${request.query.q}`;
   const query = db.query()
     .q(q)
     .qop("or");
 
   db.search(query).then((searchResponse) => {
+    // glorious inefficiency
+    const results = (searchResponse.response.docs as Record<string, string>[]).map(doc => ({
+      url: doc.url,
+      title: doc.title_t,
+      text: doc.text_t,
+    }));
     response.status(200);
-    response.send(searchResponse);
+    response.send(results);
   }).catch((reason) => {
     sendErrorResponse(response, reason);
   });
