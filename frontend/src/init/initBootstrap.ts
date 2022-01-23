@@ -21,6 +21,7 @@ import {
   // BNavItem,
   // BNavItemDropdown,
   LayoutPlugin,
+  ToastPlugin,
 } from 'bootstrap-vue';
 
 import "@/styles/bootstrap-custom.scss";
@@ -42,6 +43,7 @@ import "@/styles/bootstrap-custom.scss";
 
  export default function initBootstrap(): void {
   Vue.use(LayoutPlugin);
+  Vue.use(ToastPlugin);
   // Vue.component('BButton', BButton);
   // Vue.component('BDropdownItem', BDropdownItem);
   // Vue.component('BForm', BForm);

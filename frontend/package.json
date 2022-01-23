@@ -9,10 +9,12 @@
     "lint:fix": "vue-cli-service lint"
   },
   "dependencies": {
+    "axios": "^0.24.0",
     "bootstrap": "^4.5.3",
     "bootstrap-vue": "^2.21.2",
     "core-js": "^3.6.5",
     "jquery": "^3.6.0",
+    "lodash": "^4.17.21",
     "popper.js": "^1.16.1",
     "portal-vue": "^2.1.7",
     "register-service-worker": "^1.7.1",
@@ -21,6 +23,7 @@
     "vuex": "^3.4.0"
   },
   "devDependencies": {
+    "@types/lodash": "^4.14.178",
     "@typescript-eslint/eslint-plugin": "^4.18.0",
     "@typescript-eslint/parser": "^4.18.0",
     "@vue/cli-plugin-babel": "~4.5.0",

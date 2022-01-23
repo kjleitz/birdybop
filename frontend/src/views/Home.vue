@@ -1,20 +1,19 @@
 <template>
   <div class="home-view">
+    <session-link class="session-link" />
+    <!-- <div class="top-nav">
+      <router-link v-if="!loggedIn" :to="{ name: 'SignIn' }">Sign in</router-link>
+      <b-dropdown v-else :text="username" variant="link" right>
+        <b-dropdown-item :to="{ name: 'UserShow' }">Profile</b-dropdown-item>
+        <b-dropdown-divider />
+        <b-dropdown-item @click.prevent="logOut">Sign out</b-dropdown-item>
+      </b-dropdown>
+    </div> -->
+
     <section class="birdybop-search">
-      <h1 class="logo">birdybop</h1>
-
+      <logo class="logo"/>
       <div class="search-area">
-        <b-input-group size="lg">
-          <b-form-input
-            type="search"
-            placeholder="Search"
-            autofocus
-          ></b-form-input>
-
-          <b-input-group-append>
-            <b-button variant="primary"><b-icon-search /></b-button>
-          </b-input-group-append>
-        </b-input-group>
+        <search-bar class="search-bar"/>
       </div>
     </section>
     <!-- TODO: remove -->
@@ -32,24 +31,55 @@
     <!-- TODO: remove -->
     <!-- TODO: remove -->
     <!-- TODO: remove -->
-    <router-link :to="{ name: 'About' }">howdy</router-link>
+    <!-- <router-link :to="{ name: 'About' }">howdy</router-link>
     <a href="/foobar123">this should 404</a>
-    <a href="https://www.example.com">external</a>
+    <a href="https://www.example.com">external</a> -->
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import { BButton, BFormInput, BIconSearch, BInputGroup, BInputGroupAppend } from "bootstrap-vue";
+import Logo from "@/components/Logo.vue";
+import SearchBar from "@/components/SearchBar.vue";
+// import store from "@/store";
+// import { toastSuccess } from "@/components/mixins/toasts";
+// import {
+//   BDropdown,
+//   BDropdownItem,
+//   BDropdownDivider,
+// } from "bootstrap-vue";
+import SessionLink from "@/components/SessionLink.vue";
 
 export default Vue.extend({
   name: 'Home',
+
   components: {
-    BFormInput,
-    BInputGroup,
-    BInputGroupAppend,
-    BButton,
-    BIconSearch,
+    // BDropdown,
+    // BDropdownItem,
+    // BDropdownDivider,
+    Logo,
+    SearchBar,
+    SessionLink,
+  },
+
+  computed: {
+    // loggedIn(): boolean {
+    //   return store.getters.isLoggedIn;
+    // },
+
+    // username(): string {
+    //   return store.state.user.attributes.username;
+    // },
+  },
+
+  methods: {
+    // toastSuccess,
+
+    // logOut(): void {
+    //   store.dispatch("deleteSession").then(() => {
+    //     this.toastSuccess("Logged out.");
+    //   });
+    // },
   },
 });
 </script>
@@ -71,13 +101,21 @@ export default Vue.extend({
     justify-content: flex-start;
 
     .logo {
-      font-size: 8rem;
-      font-family: Helvetica
+      font-size: 4rem;
+
+      @media (min-width: 640px) {
+        font-size: 8rem;
+      }
     }
 
     .search-area {
       max-width: 640px;
       width: 100%;
+      padding: 0 2rem;
+
+      .search-bar {
+        width: 100%;
+      }
     }
   }
 }
