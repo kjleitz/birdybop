@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_action :require_authentication, except: [:index, :show]
+  before_action :require_authentication, except: [:index, :show, :create]
 
   # GET /users
   def index
@@ -21,9 +21,8 @@ class UsersController < ApplicationController
 
     if user.save
       new_access_token = log_in_user(user)
-      user_data = UserSerializer.new(user).as_json
-      full_data = user_data.merge({ access_token: new_access_token })
-      render json: full_data, status: :created, location: user
+      user_data = UserSerializer.new(user, meta: { accessToken: new_access_token }).as_json
+      render json: user_data, status: :created, location: user
     else
       render_errors user
     end
@@ -59,7 +58,7 @@ class UsersController < ApplicationController
   def user_params
     params.require(:user).permit(
       :username,
-      :about,
+      :bio,
     )
   end
 

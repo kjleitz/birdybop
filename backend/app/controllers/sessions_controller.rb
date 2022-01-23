@@ -8,7 +8,8 @@ class SessionsController < ApplicationController
     render_incorrect_creds and return unless user.authenticate(session_params[:password])
 
     new_access_token = log_in_user(user)
-    render json: { access_token: new_access_token }, status: :created
+    user_data = UserSerializer.new(user, meta: { accessToken: new_access_token }).as_json
+    render json: user_data, status: :created
   end
 
   def refresh
@@ -19,7 +20,8 @@ class SessionsController < ApplicationController
     render_no_refresh and return if user.blank?
 
     new_access_token = log_in_user(user)
-    render json: { access_token: new_access_token }
+    user_data = UserSerializer.new(user, meta: { accessToken: new_access_token }).as_json
+    render json: user_data
   end
 
   def destroy

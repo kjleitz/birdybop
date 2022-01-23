@@ -5,7 +5,7 @@ class UserSerializer
 
   attributes(*%i[
     username
-    about
+    bio
     role
     created_at
     updated_at

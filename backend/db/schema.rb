@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_01_09_190013) do
+ActiveRecord::Schema.define(version: 2022_01_19_203355) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -64,6 +64,7 @@ ActiveRecord::Schema.define(version: 2022_01_09_190013) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "karma", default: 0
+    t.integer "comments_count"
     t.index ["author_id"], name: "index_comments_on_author_id"
     t.index ["parent_id"], name: "index_comments_on_parent_id"
     t.index ["source_id"], name: "index_comments_on_source_id"
@@ -98,6 +99,8 @@ ActiveRecord::Schema.define(version: 2022_01_09_190013) do
     t.datetime "updated_at", precision: 6, null: false
     t.string "name", null: false
     t.text "description", default: ""
+    t.datetime "last_crawled_at"
+    t.integer "comments_count"
     t.index ["path"], name: "index_sources_on_path", unique: true
     t.index ["submitter_id"], name: "index_sources_on_submitter_id"
   end
@@ -105,7 +108,7 @@ ActiveRecord::Schema.define(version: 2022_01_09_190013) do
   create_table "users", force: :cascade do |t|
     t.string "username"
     t.string "password_digest"
-    t.text "about", default: ""
+    t.text "bio", default: ""
     t.integer "role", default: 0
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false

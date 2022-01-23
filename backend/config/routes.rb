@@ -1,7 +1,8 @@
 Rails.application.routes.draw do
-  resources :sessions, only: [:create, :destroy] do
+  resources :sessions, only: [:create] do
     collection do
       get :refresh
+      delete :destroy
     end
   end
 

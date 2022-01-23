@@ -1,13 +1,14 @@
-class SourceSerializer
+class CommentSerializer
   include JSONAPI::Serializer
 
   set_key_transform :camel_lower
 
   attributes(*%i[
-    submitter_id
-    name
-    description
-    path
+    author_id
+    parent_id
+    source_id
+    body
+    section
     karma
     comments_count
     created_at
@@ -31,5 +32,5 @@ class SourceSerializer
   # # TODO: remove/nerf
   # # TODO: remove/nerf
   # # TODO: remove/nerf
-  # has_many :comments
+  # has_many :children, serializer: CommentSerializer
 end

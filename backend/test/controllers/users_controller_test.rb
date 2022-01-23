@@ -35,7 +35,7 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
             params: {
               user: {
                 username: user_attrs[:username],
-                about: user_attrs[:about],
+                bio: user_attrs[:bio],
                 password: user_attrs[:password],
               },
             },
@@ -57,7 +57,7 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
             params: {
               user: {
                 username: user_attrs[:username],
-                about: user_attrs[:about],
+                bio: user_attrs[:bio],
                 password: user_attrs[:password],
               },
             },
@@ -83,9 +83,9 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
         log_in_as_user_factory(user_factory_name)
 
         old_username = @user1.username
-        old_about = @user1.about
+        old_bio = @user1.bio
         new_username = "#{old_username}_blah"
-        new_about = "#{old_about} blah"
+        new_bio = "#{old_bio} blah"
 
         patch(
           user_url(@user1),
@@ -94,7 +94,7 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
           params: {
             user: {
               username: new_username,
-              about: new_about,
+              bio: new_bio,
             },
           },
         )
@@ -103,7 +103,7 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
         @user1.reload
 
         assert_equal(@user1.username, new_username)
-        assert_equal(@user1.about, new_about)
+        assert_equal(@user1.bio, new_bio)
       end
 
       test "should destroy user (when #{state_description})" do
@@ -120,9 +120,9 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
         current_user = log_in_as_user_factory(user_factory_name)
 
         old_username = current_user.username
-        old_about = current_user.about
+        old_bio = current_user.bio
         new_username = "#{old_username}_blah"
-        new_about = "#{old_about} blah"
+        new_bio = "#{old_bio} blah"
 
         patch(
           user_url(current_user),
@@ -131,7 +131,7 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
           params: {
             user: {
               username: new_username,
-              about: new_about,
+              bio: new_bio,
             },
           },
         )
@@ -140,7 +140,7 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
         current_user.reload
 
         assert_equal(current_user.username, new_username)
-        assert_equal(current_user.about, new_about)
+        assert_equal(current_user.bio, new_bio)
       end
 
       test "should destroy user (when #{state_description}) (as the same user)" do
@@ -157,9 +157,9 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
         log_in_as_user_factory(user_factory_name)
 
         old_username = @user1.username
-        old_about = @user1.about
+        old_bio = @user1.bio
         new_username = "#{old_username}_blah"
-        new_about = "#{old_about} blah"
+        new_bio = "#{old_bio} blah"
 
         patch(
           user_url(@user1),
@@ -168,7 +168,7 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
           params: {
             user: {
               username: @user1.username,
-              about: @user1.about,
+              bio: @user1.bio,
             },
           },
         )
@@ -177,7 +177,7 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
         @user1.reload
 
         refute_equal(@user1.username, new_username)
-        refute_equal(@user1.about, new_about)
+        refute_equal(@user1.bio, new_bio)
       end
 
       test "should NOT destroy user (when #{state_description}) (as NOT the same user)" do
@@ -194,9 +194,9 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
         log_in_as_user_factory(user_factory_name)
 
         old_username = @user1.username
-        old_about = @user1.about
+        old_bio = @user1.bio
         new_username = "#{old_username}_blah"
-        new_about = "#{old_about} blah"
+        new_bio = "#{old_bio} blah"
 
         patch(
           user_url(@user1),
@@ -205,7 +205,7 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
           params: {
             user: {
               username: @user1.username,
-              about: @user1.about,
+              bio: @user1.bio,
             },
           },
         )
@@ -214,7 +214,7 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
         @user1.reload
 
         refute_equal(@user1.username, new_username)
-        refute_equal(@user1.about, new_about)
+        refute_equal(@user1.bio, new_bio)
       end
 
       test "should NOT destroy user (when #{state_description}) (as NOT the same user)" do
@@ -240,7 +240,7 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
       params: {
         user: {
           username: user2.username,
-          about: @user1.about,
+          bio: @user1.bio,
         },
       },
     )
@@ -259,9 +259,9 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     log_in_as_user(@user1)
 
     old_username = @user1.username
-    old_about = @user1.about
+    old_bio = @user1.bio
     new_username = "#{old_username}_blah"
-    new_about = "#{old_about} blah"
+    new_bio = "#{old_bio} blah"
 
     patch(
       user_url(@user1),
@@ -270,7 +270,7 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
       params: {
         user: {
           username: new_username,
-          about: new_about,
+          bio: new_bio,
           password: "foobar",
           old_password: "password123",
         },
@@ -283,7 +283,7 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     refute(@user1.authenticate("password123"))
     assert(@user1.authenticate("foobar"))
     assert_equal(@user1.username, new_username)
-    assert_equal(@user1.about, new_about)
+    assert_equal(@user1.bio, new_bio)
   end
 
   test "should NOT update user with a password change if the old password was supplied incorrectly" do
@@ -293,9 +293,9 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     log_in_as_user(@user1)
 
     old_username = @user1.username
-    old_about = @user1.about
+    old_bio = @user1.bio
     new_username = "#{old_username}_blah"
-    new_about = "#{old_about} blah"
+    new_bio = "#{old_bio} blah"
 
     patch(
       user_url(@user1),
@@ -304,7 +304,7 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
       params: {
         user: {
           username: new_username,
-          about: new_about,
+          bio: new_bio,
           password: "foobar",
           old_password: "abc123",
         },
@@ -317,6 +317,6 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     assert(@user1.authenticate("password123"))
     refute(@user1.authenticate("foobar"))
     refute_equal(@user1.username, new_username)
-    refute_equal(@user1.about, new_about)
+    refute_equal(@user1.bio, new_bio)
   end
 end

@@ -14,6 +14,8 @@ if Rails.env.production?
         "*",
         headers: :any,
         methods: [:get, :post, :put, :patch, :delete, :options, :head],
+        expose: ["Set-Cookie", "Content-Length", "Content-Range"],
+        credentials: true,
       )
     end
   end
@@ -26,6 +28,8 @@ else
         "*",
         headers: :any,
         methods: [:get, :post, :put, :patch, :delete, :options, :head],
+        expose: ["Set-Cookie", "Content-Length", "Content-Range"],
+        credentials: true,
       )
     end
   end

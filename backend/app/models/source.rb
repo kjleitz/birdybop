@@ -7,4 +7,16 @@ class Source < ApplicationRecord
 
   validates :path, presence: true, uniqueness: { case_sensitive: false }
   validates :name, presence: true, uniqueness: { case_sensitive: false }
+
+  def crawl!
+    CrawlSourceJob.perform_later(path)
+  end
+
+  def crawled?
+    last_crawled_at.present?
+  end
+
+  def should_crawl?
+    !crawled? || last_crawled_at < 1.week.ago
+  end
 end

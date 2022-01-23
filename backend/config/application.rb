@@ -26,8 +26,15 @@ module Birdybop
 
     # Wanna use the session cookie, despite this being API-only mode, because I
     # want to store the refresh token in an HttpOnly cookie for browsers.
-    config.session_store :cookie_store, key: "_session_birdybop_#{Rails.env}", same_site: :none, secure: true
+    config.session_store(
+      :cookie_store,
+      key: "_session_birdybop_#{Rails.env}",
+      same_site: :none,
+      secure: true,
+      domain: :all,
+    )
     config.middleware.use ActionDispatch::Cookies
     config.middleware.use config.session_store, config.session_options
+    config.middleware.use ActionDispatch::Session::CookieStore
   end
 end
