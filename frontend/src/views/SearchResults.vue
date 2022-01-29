@@ -14,9 +14,9 @@
           :key="index"
           class="search-result"
         >
-          <a :href="result.url" class="search-result-url">{{ result.url[0] }}</a>
+          <a :href="result.url" class="search-result-url">{{ result.pretty_url }}</a>
           <a :href="result.url" class="search-result-title">{{ result.title }}</a>
-          <p class="search-result-text">{{ result.text }}</p>
+          <p class="search-result-text">{{ result.content }}</p>
         </article>
       </template>
     </main>
@@ -26,7 +26,8 @@
 <script lang="ts">
 import Vue from "vue";
 import store from "@/store";
-import SearchResult from "@/types/SearchResult";
+import SearxResults from "@/types/SearxResults";
+import SearxResult from "@/types/SearxResult";
 import LoadingSplash from "@/components/LoadingSplash.vue";
 import SearchHeader from "@/components/SearchHeader.vue";
 
@@ -39,8 +40,12 @@ export default Vue.extend({
   },
 
   computed: {
-    results(): SearchResult[] {
+    searxResults(): SearxResults {
       return store.state.results;
+    },
+
+    results(): SearxResult[] {
+      return this.searxResults.results;
     },
 
     searching(): boolean {

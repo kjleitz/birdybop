@@ -44,3 +44,7 @@ gem "jsonapi-serializer", "~> 2.2"
 gem "pundit", "~> 2.1"
 
 gem "pg_search", "~> 2.3"
+
+gem "sidekiq", "~> 6.4"
+
+gem "faraday", "~> 2.1"

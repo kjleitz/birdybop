@@ -1,17 +1,6 @@
-import searcherApi from "@/api/searcherApi";
-import SearchResult from "@/types/SearchResult";
+import backendApi from "@/api/backendApi";
+import SearxResults from "@/types/SearxResults";
 
-export interface SourcePageCreateParams {
-  url: string;
-  html: string;
-  title_t: string;
-  text_t: string;
-}
-
-export function createSourcePage(params: SourcePageCreateParams): Promise<void> {
-  return searcherApi.post("/source_pages", { user: params });
-}
-
-export function searchSourcePages(q: string): Promise<SearchResult[]> {
-  return searcherApi.get<SearchResult[]>("/source_pages", { params: { q } });
+export function search(q: string): Promise<SearxResults> {
+  return backendApi.get<SearxResults>("/search", { params: { q } });
 }

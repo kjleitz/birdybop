@@ -69,7 +69,8 @@ export default class Crawler {
   private addUncrawledUrlsFrom(page: Page): Promise<void> {
     return urlsFromPageLinks(page).then((urls) => {
       urls.forEach((url) => {
-        if (this.shouldCrawl(url)) this.uncrawledUrls.add(url);
+        const niceUrl = url.trim().replace(/[#?]$/, '');
+        if (this.shouldCrawl(niceUrl)) this.uncrawledUrls.add(niceUrl);
       });
     });
   }

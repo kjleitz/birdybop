@@ -52,7 +52,6 @@
 
 <script lang="ts">
 import Vue from "vue";
-import SearchHeader from "@/components/SearchHeader.vue";
 import {
   BButton,
   BForm,
@@ -74,7 +73,6 @@ export default Vue.extend({
     BFormGroup,
     BFormInput,
     BFormTextarea,
-    SearchHeader,
   },
 
   data() {

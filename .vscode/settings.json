@@ -1,0 +1,7 @@
+{
+  "eslint.packageManager": "pnpm",
+  "eslint.workingDirectories": [
+    "frontend"
+  ],
+  "npm.packageManager": "pnpm"
+}

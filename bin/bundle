@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+set -e
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+DOCKER_COMPOSE_PATH="$SCRIPT_DIR/../docker-compose.yml"
+RUN_IN_BACKEND_ENTRYPOINT="$SCRIPT_DIR/../backend/entrypoints/run-in-backend-entrypoint.sh"
+
+docker-compose --file "$DOCKER_COMPOSE_PATH" run --rm rails_runner  --entrypoint "$RUN_IN_BACKEND_ENTRYPOINT" bundle $@

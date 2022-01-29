@@ -2,7 +2,7 @@ import BirdybopError from "@/lib/BirdybopError";
 import axios, { Axios } from "axios";
 
 const {
-  BACKEND_BASE_URL = "http://localhost:3000",
+  VUE_APP_BACKEND_BASE_URL = "http://localhost:3000",
 } = process.env;
 
 class BackendApi {
@@ -10,7 +10,7 @@ class BackendApi {
 
   constructor() {
     this.axiosInstance = axios.create({
-      baseURL: BACKEND_BASE_URL,
+      baseURL: VUE_APP_BACKEND_BASE_URL,
       withCredentials: true,
     });
   }

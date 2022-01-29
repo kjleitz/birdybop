@@ -29,7 +29,6 @@ Promise.all([
   pubsub.connect(),
 ]).then(() => {
   queuedSubscribe("source:crawl", (baseUrl) => {
-    console.log("heard!", baseUrl)
     const crawler = new Crawler({ baseUrl, searcherBaseUrl: SEARCHER_BASE_URL});
     crawler.start();
   });

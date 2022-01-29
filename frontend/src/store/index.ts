@@ -1,9 +1,10 @@
-import { searchSourcePages } from '@/api/searchService';
+import { search } from '@/api/searchService';
 import { createSession, deleteSession, refreshSession, SessionCreateParams } from '@/api/sessionService';
 import { createSource, fetchSources, SourceCreateParams } from '@/api/sourceService';
 import { createUser, UserCreateParams } from '@/api/userService';
+import { createBlankSearxResults } from '@/lib/searx-utils';
 import { createBlankUser } from '@/lib/user-utils';
-import SearchResult from '@/types/SearchResult';
+import SearxResults from '@/types/SearxResults';
 import Source from '@/types/Source';
 import User from '@/types/User';
 import Vue from 'vue';
@@ -16,7 +17,8 @@ export default new Vuex.Store({
   // TODO: this should be a function
   state: {
     query: "",
-    results: [] as SearchResult[],
+    // results: [] as SearchResult[],
+    results: createBlankSearxResults(),
     searching: false,
     sources: [] as Source[],
     loadingSources: false,
@@ -40,7 +42,7 @@ export default new Vuex.Store({
       state.query = query;
     },
 
-    setResults(state, results: SearchResult[]): void {
+    setResults(state, results: SearxResults): void {
       state.results = results;
     },
 
@@ -99,7 +101,12 @@ export default new Vuex.Store({
       commit("setQuery", q);
       commit("setSearching", true);
       commit("setResults", []);
-      return searchSourcePages(q).then((results) => {
+      // return searchSourcePages(q).then((results) => {
+      //   commit("setResults", results);
+      // }).finally(() => {
+      //   commit("setSearching", false);
+      // });
+      return search(q).then((results) => {
         commit("setResults", results);
       }).finally(() => {
         commit("setSearching", false);
