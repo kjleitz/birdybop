@@ -99,7 +99,7 @@ ActiveRecord::Schema.define(version: 2022_01_19_203355) do
     t.datetime "updated_at", precision: 6, null: false
     t.string "name", null: false
     t.text "description", default: ""
-    t.datetime "last_crawled_at"
+    t.datetime "last_crawled_at", precision: 6
     t.integer "comments_count"
     t.index ["path"], name: "index_sources_on_path", unique: true
     t.index ["submitter_id"], name: "index_sources_on_submitter_id"

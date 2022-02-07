@@ -1,7 +1,7 @@
 <template>
   <article class="link-card">
     <div class="vote-area">
-      <b-button
+      <!-- <b-button
         :pressed.sync="upvotePressed"
         size="sm"
         variant="outline-success"
@@ -9,9 +9,15 @@
         @click="$emit('upvote-clicked')"
       >
         <b-icon-caret-up-fill />
-      </b-button>
+      </b-button> -->
+      <button
+        :class="['upvote', { pressed: upvoted }]"
+        @click="$emit('upvote-clicked')"
+      >
+        &#x2303;
+      </button>
       <span class="karma">{{ karma }}</span>
-      <b-button
+      <!-- <b-button
         :pressed.sync="downvotePressed"
         size="sm"
         variant="outline-success"
@@ -19,7 +25,13 @@
         @click="$emit('downvote-clicked')"
       >
         <b-icon-caret-down-fill />
-      </b-button>
+      </b-button> -->
+      <button
+        :class="['downvote', { pressed: downvoted }]"
+        @click="$emit('downvote-clicked')"
+      >
+        &#x2304;
+      </button>
     </div>
     <div class="info-area">
       <a :href="url" class="link-url">{{ url }}</a>
@@ -34,19 +46,19 @@
 
 <script lang="ts">
 import Vue from "vue";
-import {
-  BButton,
-  BIconCaretDownFill,
-  BIconCaretUpFill,
-} from "bootstrap-vue";
+// import {
+//   BButton,
+//   BIconCaretDownFill,
+//   BIconCaretUpFill,
+// } from "bootstrap-vue";
 
 export default Vue.extend({
   name: "LinkCard",
 
   components: {
-    BButton,
-    BIconCaretDownFill,
-    BIconCaretUpFill,
+    // BButton,
+    // BIconCaretDownFill,
+    // BIconCaretUpFill,
   },
 
   props: {
@@ -81,30 +93,30 @@ export default Vue.extend({
     },
   },
 
-  data() {
-    return {
-      upvotePressed: this.upvoted,
-      downvotePressed: this.downvoted,
-    };
-  },
+  // data() {
+  //   return {
+  //     upvotePressed: this.upvoted,
+  //     downvotePressed: this.downvoted,
+  //   };
+  // },
 
-  watch: {
-    upvoted(newVal: boolean, oldVal: boolean): void {
-      if (newVal !== oldVal && newVal !== this.upvotePressed) this.upvotePressed = newVal;
-    },
+  // watch: {
+  //   upvoted(newVal: boolean, oldVal: boolean): void {
+  //     if (newVal !== oldVal && newVal !== this.upvotePressed) this.upvotePressed = newVal;
+  //   },
 
-    downvoted(newVal: boolean, oldVal: boolean): void {
-      if (newVal !== oldVal && newVal !== this.downvotePressed) this.downvotePressed = newVal;
-    },
+  //   downvoted(newVal: boolean, oldVal: boolean): void {
+  //     if (newVal !== oldVal && newVal !== this.downvotePressed) this.downvotePressed = newVal;
+  //   },
 
-    upvotePressed(newVal: boolean, oldVal: boolean): void {
-      if (newVal !== oldVal && newVal !== this.upvoted) this.$emit("update:upvoted", newVal);
-    },
+  //   upvotePressed(newVal: boolean, oldVal: boolean): void {
+  //     if (newVal !== oldVal && newVal !== this.upvoted) this.$emit("update:upvoted", newVal);
+  //   },
 
-    downvotePressed(newVal: boolean, oldVal: boolean): void {
-      if (newVal !== oldVal && newVal !== this.downvoted) this.$emit("update:downvoted", newVal);
-    },
-  },
+  //   downvotePressed(newVal: boolean, oldVal: boolean): void {
+  //     if (newVal !== oldVal && newVal !== this.downvoted) this.$emit("update:downvoted", newVal);
+  //   },
+  // },
 });
 </script>
 
@@ -122,6 +134,18 @@ export default Vue.extend({
     justify-content: center;
     align-items: center;
     width: 3rem;
+
+    .upvote {
+      &.pressed {
+        color: orangered;
+      }
+    }
+
+    .downvote {
+      &.pressed {
+        color: slateblue;
+      }
+    }
   }
 
   .info-area {

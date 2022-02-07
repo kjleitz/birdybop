@@ -17,6 +17,7 @@ export default Vue.extend({
 <style lang="scss">
 h1.logo {
   font-family: Helvetica;
+  font-weight: normal;
 
   a {
     text-decoration: none;

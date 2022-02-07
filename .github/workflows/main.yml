@@ -1,3 +1,5 @@
+# TODO: make use of docker-compose setup now that that's a thing.
+
 name: Test and lint
 
 on:
@@ -105,8 +107,8 @@ jobs:
       - name: Run ESLint lints
         run: pnpm run lint
 
-      # - name: Run unit tests
-      #   run: pnpm run test:unit
+      - name: Run unit tests
+        run: pnpm run test:unit
 
       # - name: Run e2e tests
       #   run: pnpm run test:e2e

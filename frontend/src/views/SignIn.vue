@@ -7,7 +7,34 @@
         Don't have an account yet? <router-link :to="{ name: 'SignUp' }">Click here to sign up.</router-link>
       </p>
 
-      <b-form @submit.prevent="onSubmit">
+      <form action="#" @submit.prevent="onSubmit">
+        <label>
+          Username
+          <input
+            v-model="form.username"
+            type="text"
+            name="username"
+            required
+            autofocus
+          />
+        </label>
+
+        <label>
+          Password
+          <input
+            v-model="form.password"
+            type="password"
+            name="password"
+            required
+          />
+        </label>
+
+        <button type="submit" @click="onSubmit">
+          Sign in
+        </button>
+      </form>
+
+      <!-- <b-form @submit.prevent="onSubmit">
         <b-form-group label="Username" label-for="sign-in-username-input">
           <b-form-input
             v-model="form.username"
@@ -32,7 +59,7 @@
         <b-button type="submit" variant="primary">
           Sign in
         </b-button>
-      </b-form>
+      </b-form> -->
     </main>
   </div>
 </template>
@@ -40,12 +67,12 @@
 <script lang="ts">
 import { SessionCreateParams } from "@/api/sessionService";
 import store from "@/store";
-import {
-  BButton,
-  BForm,
-  BFormGroup,
-  BFormInput,
-} from "bootstrap-vue";
+// import {
+//   BButton,
+//   BForm,
+//   BFormGroup,
+//   BFormInput,
+// } from "bootstrap-vue";
 import Vue from "vue";
 import SearchHeader from "@/components/SearchHeader.vue";
 import { toastSuccess, toastError } from "@/components/mixins/toasts";
@@ -55,10 +82,10 @@ export default Vue.extend({
   name: "SignIn",
 
   components: {
-    BButton,
-    BForm,
-    BFormGroup,
-    BFormInput,
+    // BButton,
+    // BForm,
+    // BFormGroup,
+    // BFormInput,
     SearchHeader,
   },
 

@@ -8,7 +8,7 @@ FactoryBot.define do
     # comments { [association(:comment)] }
 
     factory :wikipedia do
-      path { "wikipedia.org" }
+      path { "en.wikipedia.org" }
       name { "Wikipedia" }
       description { "The Free Encyclopedia" }
     end

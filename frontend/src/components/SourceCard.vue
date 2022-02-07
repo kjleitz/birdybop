@@ -116,11 +116,13 @@ export default Vue.extend({
 
   methods: {
     onUpvoteClicked(): void {
-
+      this.foobarUp = !this.foobarUp;
+      this.foobarDown = false;
     },
 
     onDownvoteClicked(): void {
-
+      this.foobarDown = !this.foobarDown;
+      this.foobarUp = false;
     },
   },
 });

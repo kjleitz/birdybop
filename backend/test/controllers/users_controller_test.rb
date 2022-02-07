@@ -22,54 +22,30 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
       assert_response :success
     end
 
-    if user_factory_name.nil?
-      test "should NOT create user (when #{state_description})" do
-        log_in_as_user_factory(user_factory_name)
-        user_attrs = attributes_for(:user)
+    test "should create user (when #{state_description})" do
+      log_in_as_user_factory(user_factory_name)
+      user_attrs = attributes_for(:user)
 
-        assert_difference('User.count', 0) do
-          post(
-            users_url,
-            as: :json,
-            headers: @auth_headers,
-            params: {
-              user: {
-                username: user_attrs[:username],
-                bio: user_attrs[:bio],
-                password: user_attrs[:password],
-              },
+      assert_difference('User.count', 1) do
+        post(
+          users_url,
+          as: :json,
+          headers: @auth_headers,
+          params: {
+            user: {
+              username: user_attrs[:username],
+              bio: user_attrs[:bio],
+              password: user_attrs[:password],
             },
-          )
+          },
+        )
 
-          assert_response 401
-        end
+        assert_response 201
       end
-    else
-      test "should create user (when #{state_description})" do
-        log_in_as_user_factory(user_factory_name)
-        user_attrs = attributes_for(:user)
 
-        assert_difference('User.count', 1) do
-          post(
-            users_url,
-            as: :json,
-            headers: @auth_headers,
-            params: {
-              user: {
-                username: user_attrs[:username],
-                bio: user_attrs[:bio],
-                password: user_attrs[:password],
-              },
-            },
-          )
-
-          assert_response 201
-        end
-
-        user = User.last
-        assert_equal(user.username, user_attrs[:username])
-        assert(user.authenticate(user_attrs[:password]))
-      end
+      user = User.last
+      assert_equal(user.username, user_attrs[:username])
+      assert(user.authenticate(user_attrs[:password]))
     end
 
     test "should show user (when #{state_description})" do

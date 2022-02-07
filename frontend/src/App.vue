@@ -55,20 +55,27 @@ export default Vue.extend({
   opacity: 0;
 }
 
+$main-sm-padding-x: 2rem;
+$main-md-padding-x: 6rem;
+$main-lg-padding-x: 12.5rem;
+$main-max-width: 640px;
+
 main {
-  padding-left: 2rem;
-  padding-right: 2rem;
-  max-width: 640px;
+  padding-left: $main-sm-padding-x;
+  padding-right: $main-sm-padding-x;
+  max-width: calc((2 * $main-sm-padding-x) + $main-max-width);
   width: 100%;
   padding-top: 2rem;
   padding-bottom: 2rem;
 
   @media (min-width: 640px) {
-    padding-left: 4rem;
+    padding-left: $main-md-padding-x;
+    max-width: calc($main-sm-padding-x + $main-md-padding-x + $main-max-width);
   }
 
   @media (min-width: 800px) {
-    padding-left: 10rem;
+    padding-left: $main-lg-padding-x;
+    max-width: calc($main-sm-padding-x + $main-lg-padding-x + $main-max-width);
   }
 }
 </style>

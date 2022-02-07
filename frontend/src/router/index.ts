@@ -97,6 +97,33 @@ const routes: RouteConfig[] = [
       },
     ],
   },
+  {
+    path: "/users",
+    component: () => import(/* webpackChunkName: "users" */ "@/views/Users.vue"),
+    children: [
+      {
+        path: "",
+        name: "UsersIndex",
+        component: () => import(/* webpackChunkName: "users_index" */ "@/views/UsersIndex.vue"),
+      },
+      {
+        path: ":userId",
+        component: () => import(/* webpackChunkName: "user" */ "@/views/User.vue"),
+        children: [
+          {
+            path: "",
+            name: "UserShow",
+            component: () => import(/* webpackChunkName: "user_show" */ "@/views/UserShow.vue"),
+          },
+          {
+            path: "edit",
+            name: "UserEdit",
+            component: () => import(/* webpackChunkName: "user_edit" */ "@/views/UserEdit.vue"),
+          },
+        ],
+      },
+    ],
+  },
 ];
 
 const router = new VueRouter({

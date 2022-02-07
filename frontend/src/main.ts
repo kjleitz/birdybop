@@ -1,11 +1,13 @@
-import initBootstrap from '@/init/initBootstrap';
+// import initBootstrap from '@/init/initBootstrap';
+import initSimpledotcss from '@/init/initSimpledotcss';
 import Vue from 'vue';
 import App from '@/App.vue';
 import '@/registerServiceWorker';
 import router from '@/router';
 import store from '@/store';
 
-initBootstrap();
+// initBootstrap();
+initSimpledotcss();
 
 Vue.config.productionTip = false;
 

@@ -3,7 +3,7 @@
 wikipedia:
   name: Wikipedia
   description: The Free Encyclopedia
-  path: wikipedia.org
+  path: en.wikipedia.org
   submitter: user1
   karma: 0
 

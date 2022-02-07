@@ -2,15 +2,21 @@ import { search } from '@/api/searchService';
 import { createSession, deleteSession, refreshSession, SessionCreateParams } from '@/api/sessionService';
 import { createSource, fetchSources, SourceCreateParams } from '@/api/sourceService';
 import { createUser, UserCreateParams } from '@/api/userService';
-import { createBlankSearxResults } from '@/lib/searx-utils';
+// import { createBlankSearxResults } from '@/lib/searx-utils';
 import { createBlankUser } from '@/lib/user-utils';
-import SearxResults from '@/types/SearxResults';
+import { uniqInPlace } from '@/lib/utils';
+import JsonApi from '@/types/JsonApi';
+import SearxResult from '@/types/SearxResult';
+// import SearxResults from '@/types/SearxResults';
 import Source from '@/types/Source';
 import User from '@/types/User';
+import Comment from '@/types/Comment';
 import Vue from 'vue';
 import Vuex from 'vuex';
 
 Vue.use(Vuex);
+
+(window as any).uniqInPlace = uniqInPlace;
 
 // TODO: switch to pinia
 export default new Vuex.Store({
@@ -18,7 +24,10 @@ export default new Vuex.Store({
   state: {
     query: "",
     // results: [] as SearchResult[],
-    results: createBlankSearxResults(),
+    // results: createBlankSearxResults(),
+    darkMode: localStorage.getItem("birdybop:settings:darkMode") === "true"
+      || (!!window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches),
+    results: [] as SearxResult[],
     searching: false,
     sources: [] as Source[],
     loadingSources: false,
@@ -29,6 +38,12 @@ export default new Vuex.Store({
     deletingSession: false,
     intendedDestination: "",
     creatingSource: false,
+    db: {
+      comment: [] as Comment[],
+      searxResult: [] as SearxResult[],
+      source: [] as Source[],
+      user: [] as User[],
+    },
   },
 
   getters: {
@@ -38,11 +53,38 @@ export default new Vuex.Store({
   },
 
   mutations: {
+    setDarkMode(state, darkMode: boolean): void {
+      localStorage.setItem("birdybop:settings:darkMode", `${darkMode}`);
+      state.darkMode = darkMode;
+    },
+
+    addToDb(state, resourceData: JsonApi.ResourceData | JsonApi.ResourceData[]): void {
+      const db = state.db as Record<string, JsonApi.ResourceData[]>;
+      const types = new Set<string>();
+
+      const addResource = (item: JsonApi.ResourceData): void => {
+        types.add(item.type);
+        const collection = db[item.type];
+        collection.push(item);
+      };
+
+      if (Array.isArray(resourceData)) {
+        resourceData.forEach(item => addResource(item));
+      } else {
+        addResource(resourceData);
+      }
+
+      types.forEach((itemType) => {
+        const collection = db[itemType];
+        uniqInPlace(collection, item => item.id);
+      });
+    },
+
     setQuery(state, query: string): void {
       state.query = query;
     },
 
-    setResults(state, results: SearxResults): void {
+    setResults(state, results: SearxResult[]): void {
       state.results = results;
     },
 
@@ -101,13 +143,11 @@ export default new Vuex.Store({
       commit("setQuery", q);
       commit("setSearching", true);
       commit("setResults", []);
-      // return searchSourcePages(q).then((results) => {
-      //   commit("setResults", results);
-      // }).finally(() => {
-      //   commit("setSearching", false);
-      // });
       return search(q).then((results) => {
-        commit("setResults", results);
+        // TODO: This, but for the other API calls
+        const { data, included } = results;
+        if (included) commit("addToDb", included);
+        commit("setResults", data);
       }).finally(() => {
         commit("setSearching", false);
       });

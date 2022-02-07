@@ -33,3 +33,31 @@ export function stringifyError(error: any, defaultMessage = "Something went wron
 
   return defaultMessage;
 }
+
+export function uniqInPlace<T>(list: T[], toKey = (item: T): any => item): void {
+  const seen = {} as Record<string, boolean>;
+  let i = 0;
+
+  while (i < list.length) {
+    const key = toKey(list[i]);
+
+    if (seen[key]) {
+      list.splice(i, 1);
+    } else {
+      seen[key] = true;
+      i += 1;
+    }
+  }
+}
+
+export function bound(value: number, min: number, max: number): number {
+  let realMin = min;
+  let realMax = max;
+
+  if (min > max) {
+    realMin = max;
+    realMax = min;
+  }
+
+  return Math.max(Math.min(value, realMax), realMin);
+}

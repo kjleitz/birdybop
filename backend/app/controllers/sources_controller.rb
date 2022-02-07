@@ -26,7 +26,8 @@ class SourcesController < ApplicationController
     authorize(source)
 
     if source.save
-      source.crawl!
+      # source.upvote!(current_user)
+      # source.crawl!
       render json: SourceSerializer.new(source).as_json, status: :created, location: source
     else
       render_errors source

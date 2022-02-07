@@ -1,11 +1,15 @@
 <template>
   <div class="session-link">
     <router-link v-if="!isLoggedIn" :to="{ name: 'SignIn' }">Sign in</router-link>
-    <b-dropdown v-else :text="username" variant="link" right>
-      <b-dropdown-item :to="{ name: 'UserShow' }">Profile</b-dropdown-item>
-      <b-dropdown-divider />
-      <b-dropdown-item @click.prevent="logOut">Sign out</b-dropdown-item>
-    </b-dropdown>
+    <dropdown v-else right>
+      <template #label>{{ username }}</template>
+      <template #items>
+        <a href="#">foobar1</a>
+        <a href="#">foobar2</a>
+        <a href="#">foobar3</a>
+      </template>
+    </dropdown>
+    <checkbox v-model="darkMode">dark</checkbox>
   </div>
 </template>
 
@@ -14,19 +18,29 @@ import { toastError } from "@/components/mixins/toasts";
 import store from "@/store";
 import Vue from "vue";
 import { mapActions, mapGetters } from "vuex";
-import {
-  BDropdown,
-  BDropdownItem,
-  BDropdownDivider,
-} from "bootstrap-vue";
+// import {
+//   BDropdown,
+//   BDropdownItem,
+//   BDropdownDivider,
+// } from "bootstrap-vue";
+import Checkbox from "@/components/Checkbox.vue";
+import Dropdown from "@/components/Dropdown.vue";
 
 export default Vue.extend({
   name: "SessionLink",
 
   components: {
-    BDropdown,
-    BDropdownItem,
-    BDropdownDivider,
+    // BDropdown,
+    // BDropdownItem,
+    // BDropdownDivider,
+    Checkbox,
+    Dropdown,
+  },
+
+  data() {
+    return {
+      darkMode: store.state.darkMode,
+    };
   },
 
   computed: {
@@ -34,6 +48,16 @@ export default Vue.extend({
 
     username(): string {
       return store.state.user.attributes.username;
+    },
+
+    userId(): string {
+      return store.state.user.id;
+    },
+  },
+
+  watch: {
+    darkMode(newVal: boolean, _oldVal: boolean): void {
+      store.commit("setDarkMode", newVal);
     },
   },
 

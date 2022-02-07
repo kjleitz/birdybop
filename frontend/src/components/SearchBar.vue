@@ -1,12 +1,31 @@
 <template>
   <div class="search-bar">
-    <b-input-group size="lg">
+    <form action="#" @submit.prevent="submitSearch">
+      <input
+        type="text"
+        v-model="searchQuery"
+        :disabled="searching"
+        name="search"
+        placeholder="Search"
+        @keydown.prevent.exact.enter="submitSearch"
+      />
+      <button
+        :disabled="searching"
+        type="submit"
+        @click="submitSearch"
+      >
+        <!-- TODO: spinner -->
+        <span class="magnifying-glass">&#x26B2;</span>
+      </button>
+    </form>
+
+    <!-- <b-input-group size="lg">
       <b-form-input
         v-model="searchQuery"
         :disabled="searching"
+        :autofocus="!searchQuery"
         type="search"
         placeholder="Search"
-        autofocus
         @keydown.prevent.exact.enter="submitSearch"
       ></b-form-input>
 
@@ -23,33 +42,33 @@
           </transition>
         </b-button>
       </b-input-group-append>
-    </b-input-group>
+    </b-input-group> -->
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 import store from '@/store';
-import {
-  BButton,
-  BFormInput,
-  BIconQuestionCircle,
-  BIconSearch,
-  BInputGroup,
-  BInputGroupAppend,
-} from "bootstrap-vue";
+// import {
+//   BButton,
+//   BFormInput,
+//   BIconQuestionCircle,
+//   BIconSearch,
+//   BInputGroup,
+//   BInputGroupAppend,
+// } from "bootstrap-vue";
 import { filterNavDuplicated } from "@/lib/error-filters";
 
 export default Vue.extend({
   name: "SearchBar",
 
   components: {
-    BButton,
-    BFormInput,
-    BIconQuestionCircle,
-    BIconSearch,
-    BInputGroup,
-    BInputGroupAppend,
+    // BButton,
+    // BFormInput,
+    // BIconQuestionCircle,
+    // BIconSearch,
+    // BInputGroup,
+    // BInputGroupAppend,
   },
 
   data() {
@@ -92,4 +111,11 @@ export default Vue.extend({
 //   max-width: 640px;
 //   width: 100%;
 // }
+
+.search-bar {
+  .magnifying-glass {
+    display: inline-block;
+    transform: rotate(-45deg);
+  }
+}
 </style>

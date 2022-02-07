@@ -9,15 +9,12 @@
         No results found for "{{ query }}"
       </template>
       <template v-else>
-        <article
+        <search-result
           v-for="(result, index) in results"
           :key="index"
-          class="search-result"
-        >
-          <a :href="result.url" class="search-result-url">{{ result.pretty_url }}</a>
-          <a :href="result.url" class="search-result-title">{{ result.title }}</a>
-          <p class="search-result-text">{{ result.content }}</p>
-        </article>
+          :result="result"
+          :sources="result.relationships.sources"
+        />
       </template>
     </main>
   </div>
@@ -26,10 +23,10 @@
 <script lang="ts">
 import Vue from "vue";
 import store from "@/store";
-import SearxResults from "@/types/SearxResults";
 import SearxResult from "@/types/SearxResult";
 import LoadingSplash from "@/components/LoadingSplash.vue";
 import SearchHeader from "@/components/SearchHeader.vue";
+import SearchResultComponent from "@/components/SearchResult.vue";
 
 export default Vue.extend({
   name: 'SearchResults',
@@ -37,15 +34,12 @@ export default Vue.extend({
   components: {
     LoadingSplash,
     SearchHeader,
+    SearchResult: SearchResultComponent,
   },
 
   computed: {
-    searxResults(): SearxResults {
-      return store.state.results;
-    },
-
     results(): SearxResult[] {
-      return this.searxResults.results;
+      return store.state.results;
     },
 
     searching(): boolean {
@@ -79,57 +73,18 @@ export default Vue.extend({
 
 <style lang="scss">
 .search-results-view {
-  // .padded {
-  //   padding-left: 2rem;
-  //   padding-right: 2rem;
-
-  //   @media (min-width: 640px) {
-  //     padding-left: 4rem;
-  //   }
-
-  //   @media (min-width: 800px) {
-  //     padding-left: 10rem;
-  //   }
-  // }
-
   .birdybop-search-results {
     position: relative;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
-    // max-width: 640px;
-    // width: 100%;
-    // padding-top: 2rem;
-    // padding-bottom: 2rem;
 
     .loading-splash {
       position: absolute;
       top: 12.5vh;
       left: 0;
       width: 100vw;
-    }
-
-    .search-result {
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      align-items: flex-start;
-      font-size: 1rem;
-
-      .search-result-url {
-        color: #555;
-        font-size: 0.875em;
-      }
-
-      .search-result-title {
-        font-size: 1.25em;
-      }
-
-      .search-result-text {
-        color: #333;
-        font-size: 1em;
-      }
     }
   }
 }

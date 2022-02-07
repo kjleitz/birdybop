@@ -1,4 +1,5 @@
 import BirdybopError from "@/lib/BirdybopError";
+import JsonApi from "@/types/JsonApi";
 import axios, { Axios } from "axios";
 
 const {
@@ -15,45 +16,75 @@ class BackendApi {
     });
   }
 
-  get<ResourceData>(...args: Parameters<Axios["get"]>): Promise<ResourceData> {
-    return this.axiosInstance.get<{ data: ResourceData }>(...args)
-      .then(({ data: { data } }) => data)
-      .catch(BirdybopError.rethrow);
-  }
-
-  patch<ResourceData>(...args: Parameters<Axios["patch"]>): Promise<ResourceData> {
-    return this.axiosInstance.patch<{ data: ResourceData }>(...args)
-      .then(({ data: { data } }) => data)
-      .catch(BirdybopError.rethrow);
-  }
-
-  post<ResourceData>(...args: Parameters<Axios["post"]>): Promise<ResourceData> {
-    return this.axiosInstance.post<{ data: ResourceData }>(...args)
-      .then(({ data: { data } }) => data)
-      .catch(BirdybopError.rethrow);
-  }
-
-  delete<ResourceData = void>(...args: Parameters<Axios["delete"]>): Promise<ResourceData> {
-    return this.axiosInstance.delete<{ data: ResourceData }>(...args)
-      .then(({ data: { data } }) => data)
-      .catch(BirdybopError.rethrow);
-  }
-
-  getWithMeta<ResourceData, ResourceMeta extends Record<string, any>>(
-    ...args: Parameters<Axios["get"]>
-  ): Promise<{ data: ResourceData, meta?: ResourceMeta }> {
-    return this.axiosInstance.get<{ data: ResourceData, meta?: ResourceMeta }>(...args)
+  get<R extends JsonApi.SuccessResponse>(...args: Parameters<Axios["get"]>): Promise<R> {
+    return this.axiosInstance.get<R>(...args)
       .then(({ data }) => data)
       .catch(BirdybopError.rethrow);
   }
 
-  postWithMeta<ResourceData, ResourceMeta extends Record<string, any>>(
-    ...args: Parameters<Axios["post"]>
-  ): Promise<{ data: ResourceData, meta?: ResourceMeta }> {
-    return this.axiosInstance.post<{ data: ResourceData, meta?: ResourceMeta }>(...args)
+  patch<R extends JsonApi.SuccessResponse>(...args: Parameters<Axios["patch"]>): Promise<R> {
+    return this.axiosInstance.patch<R>(...args)
       .then(({ data }) => data)
       .catch(BirdybopError.rethrow);
   }
+
+  post<R extends JsonApi.SuccessResponse>(...args: Parameters<Axios["post"]>): Promise<R> {
+    return this.axiosInstance.post<R>(...args)
+      .then(({ data }) => data)
+      .catch(BirdybopError.rethrow);
+  }
+
+  // delete<R extends JsonApi.SuccessResponse>(...args: Parameters<Axios["delete"]>): Promise<R> {
+  //   return this.axiosInstance.delete<R>(...args)
+  //     .then(({ data }) => data)
+  //     .catch(BirdybopError.rethrow);
+  // }
+
+  delete(...args: Parameters<Axios["delete"]>): Promise<void> {
+    return this.axiosInstance.delete(...args)
+      .then(({ data }) => data)
+      .catch(BirdybopError.rethrow);
+  }
+
+  // get<ResourceData>(...args: Parameters<Axios["get"]>): Promise<ResourceData> {
+  //   return this.axiosInstance.get<{ data: ResourceData }>(...args)
+  //     .then(({ data: { data } }) => data)
+  //     .catch(BirdybopError.rethrow);
+  // }
+
+  // patch<ResourceData>(...args: Parameters<Axios["patch"]>): Promise<ResourceData> {
+  //   return this.axiosInstance.patch<{ data: ResourceData }>(...args)
+  //     .then(({ data: { data } }) => data)
+  //     .catch(BirdybopError.rethrow);
+  // }
+
+  // post<ResourceData>(...args: Parameters<Axios["post"]>): Promise<ResourceData> {
+  //   return this.axiosInstance.post<{ data: ResourceData }>(...args)
+  //     .then(({ data: { data } }) => data)
+  //     .catch(BirdybopError.rethrow);
+  // }
+
+  // delete<ResourceData = void>(...args: Parameters<Axios["delete"]>): Promise<ResourceData> {
+  //   return this.axiosInstance.delete<{ data: ResourceData }>(...args)
+  //     .then(({ data: { data } }) => data)
+  //     .catch(BirdybopError.rethrow);
+  // }
+
+  // getWithMeta<ResourceData, ResourceMeta extends Record<string, any>>(
+  //   ...args: Parameters<Axios["get"]>
+  // ): Promise<{ data: ResourceData, meta?: ResourceMeta }> {
+  //   return this.axiosInstance.get<{ data: ResourceData, meta?: ResourceMeta }>(...args)
+  //     .then(({ data }) => data)
+  //     .catch(BirdybopError.rethrow);
+  // }
+
+  // postWithMeta<ResourceData, ResourceMeta extends Record<string, any>>(
+  //   ...args: Parameters<Axios["post"]>
+  // ): Promise<{ data: ResourceData, meta?: ResourceMeta }> {
+  //   return this.axiosInstance.post<{ data: ResourceData, meta?: ResourceMeta }>(...args)
+  //     .then(({ data }) => data)
+  //     .catch(BirdybopError.rethrow);
+  // }
 
   setDefaultHeader(name: string, value: string): void {
     this.axiosInstance.defaults.headers.get[name] = value;

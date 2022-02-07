@@ -12,5 +12,8 @@ export function createBlankUser(attributes: Partial<User["attributes"]> = {}): U
       updatedAt: new Date().toJSON(),
       ...attributes,
     },
+    relationships: undefined,
+    links: undefined,
+    meta: undefined,
   };
 }

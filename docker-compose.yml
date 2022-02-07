@@ -17,7 +17,7 @@ x-rails: &rails
     - bundle:/usr/local/bundle
   env_file: ./backend/.env
   environment:
-    RAILS_ENV: development
+    RAILS_ENV: "${RAILS_ENV:-development}"
     SEARCHER_BASE_URL: "http://searx:8080"
   #
   # From "Ruby on Whales":
@@ -34,20 +34,27 @@ x-rails: &rails
 services:
   rails_runner:
     <<: *rails
+    stdin_open: true
+    tty: true
     depends_on:
       - postgres
       - redis
+    ports:
+      - "9876:9876" # for pry-remote
     profiles:
       - debug
     entrypoint: ./entrypoints/rails-runner-entrypoint.sh
 
   backend:
     <<: *rails
+    stdin_open: true
+    tty: true
     depends_on:
       - postgres
       - redis
     ports:
       - "3000:3000"
+      - "9876:9876" # for pry-remote
 
   frontend:
     build:

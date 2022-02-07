@@ -28,8 +28,9 @@ class ActiveSupport::TestCase
     )
 
     response_data = JSON.parse(response.body)
+    access_token = (response_data.presence || {}).dig("meta", "accessToken")
     @auth_headers = (@auth_headers || {}).merge({
-      "Authorization" => "Bearer #{response_data['access_token']}",
+      "Authorization" => "Bearer #{access_token}",
     })
 
     user

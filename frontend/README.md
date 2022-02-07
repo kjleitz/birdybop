@@ -39,6 +39,12 @@ pnpm run build
 pnpm run lint
 ```
 
+### run the tests
+
+```
+pnpm run test:unit
+```
+
 ## TODO
 
 - literally everything

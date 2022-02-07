@@ -7,7 +7,47 @@
         Birdybop users.
       </p>
 
-      <b-form @submit.prevent="createSource">
+      <form action="#" @submit.prevent="createSource">
+        <label>
+          Name
+          <input
+            v-model="form.name"
+            type="text"
+            name="name"
+            placeholder="Some Website"
+            required
+            autofocus
+          />
+        </label>
+
+        <label>
+          Path
+          <input
+            v-model="form.path"
+            type="text"
+            name="path"
+            placeholder="https://some.website/community/knowledge"
+            required
+          />
+        </label>
+
+        <label>
+          Description
+          <textarea
+            v-model="form.description"
+            name="description"
+            placeholder="Some Website collects community-submitted knowledge from users across the world."
+            required
+          ></textarea>
+        </label>
+
+        <button type="submit" @click="createSource">
+          Add source to Birdybop
+        </button>
+      </form>
+
+
+      <!-- <b-form @submit.prevent="createSource">
         <b-form-group label="Name" label-for="source-name-input">
           <b-form-input
             v-model="form.name"
@@ -45,20 +85,20 @@
         <b-button type="submit" variant="primary">
           Add source to Birdybop
         </b-button>
-      </b-form>
+      </b-form> -->
     </main>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import {
-  BButton,
-  BForm,
-  BFormGroup,
-  BFormInput,
-  BFormTextarea,
-} from "bootstrap-vue";
+// import {
+//   BButton,
+//   BForm,
+//   BFormGroup,
+//   BFormInput,
+//   BFormTextarea,
+// } from "bootstrap-vue";
 import store from "@/store";
 import { SourceCreateParams } from "@/api/sourceService";
 import { catchHttpCode } from "@/lib/error-filters";
@@ -68,11 +108,11 @@ export default Vue.extend({
   name: "SourcesNew",
 
   components: {
-    BButton,
-    BForm,
-    BFormGroup,
-    BFormInput,
-    BFormTextarea,
+    // BButton,
+    // BForm,
+    // BFormGroup,
+    // BFormInput,
+    // BFormTextarea,
   },
 
   data() {
