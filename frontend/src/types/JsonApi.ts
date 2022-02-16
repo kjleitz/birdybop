@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-namespace */
 
-import { Require } from "@/types/common";
+import type { Require } from "@/types/common";
 
 // TODO: there really needs to be a description of the full response (which
 // has `data`, `meta`, etc. as root keys)

@@ -1,17 +1,35 @@
+/* eslint-env node */
+require("@rushstack/eslint-patch/modern-module-resolution");
+
+// module.exports = {
+//   "root": true,
+//   "extends": [
+//     "plugin:vue/vue3-essential",
+//     "eslint:recommended",
+//     "@vue/eslint-config-typescript/recommended"
+//   ],
+//   "env": {
+//     "vue/setup-compiler-macros": true
+//   }
+// }
+
+
 module.exports = {
   root: true,
   env: {
-    browser: true,
-    node: true,
+    // browser: true,
+    // node: true,
+    es2021: true,
+    "vue/setup-compiler-macros": true,
   },
   extends: [
-    "plugin:vue/essential",
+    "plugin:vue/vue3-essential",
     "eslint:recommended",
-    "@vue/typescript/recommended",
+    "@vue/eslint-config-typescript/recommended",
   ],
-  parserOptions: {
-    ecmaVersion: 2020,
-  },
+  // parserOptions: {
+  //   ecmaVersion: 2020,
+  // },
   rules: {
     "no-console": process.env.NODE_ENV === "production" ? "warn" : "off",
     "no-debugger": process.env.NODE_ENV === "production" ? "warn" : "off",
@@ -25,5 +43,6 @@ module.exports = {
     "no-unused-vars": ["warn", { argsIgnorePattern: "^_", varsIgnorePattern: "^_" }],
     "semi": "off", // conflicts with TS' semi rule; see https://github.com/typescript-eslint/typescript-eslint/issues/123
     "no-trailing-spaces": "error",
+    "vue/multi-word-component-names": "off",
   },
 };

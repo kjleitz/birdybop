@@ -1,5 +1,6 @@
 import backendApi from "@/api/backendApi";
-import User, { UserCollectionResponse, UserItemResponse } from "@/types/User";
+import type User from "@/types/User";
+import type { UserCollectionResponse, UserItemResponse } from "@/types/User";
 
 export interface UserCreateParams {
   username: string;

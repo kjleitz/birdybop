@@ -68,8 +68,9 @@ services:
       - ./frontend:/app:cached
       - node_modules:/app/node_modules
     environment:
-      VUE_APP_BACKEND_BASE_URL: "http://localhost:3000"
-      VUE_APP_SEARCHER_BASE_URL: "http://localhost:3000" # tunnel through backend
+      VITE_BACKEND_BASE_URL: "http://localhost:3000"
+      VITE_SEARCHER_BASE_URL: "http://localhost:3000" # tunnel through backend
+    stop_signal: SIGKILL # sending TERM to `pnpm run ...` does not propagate TERM to child processes (see https://github.com/pnpm/pnpm/issues/2653) so it takes forever to stop
 
   searx:
     image: searx/searx
@@ -77,11 +78,11 @@ services:
       - ./searx:/etc/searx
     environment:
       BASE_URL: "http://localhost:9090/"
+    stop_signal: SIGQUIT # doesn't stop with TERM but QUIT seems to work just fine
 
   sidekiq:
     <<: *rails
     depends_on:
-      - backend
       - postgres
       - redis
     entrypoint: ./entrypoints/sidekiq-entrypoint.sh

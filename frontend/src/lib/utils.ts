@@ -1,4 +1,4 @@
-import { AxiosError } from "axios";
+import type { AxiosError } from "axios";
 import uniq from "lodash/uniq";
 
 export function punctuate(phrase: string): string {
@@ -61,3 +61,24 @@ export function bound(value: number, min: number, max: number): number {
 
   return Math.max(Math.min(value, realMax), realMin);
 }
+
+export function classChecker<T>(klass: { new(...args: any[]): T } | { (...args: any[]): T }): (value: any) => boolean {
+  const targetString = `[object ${klass.name}]`;
+  const objectString = `[object Object]`;
+
+  return (value) => {
+    const asString = Object.prototype.toString.call(value);
+    return asString === targetString || (asString === objectString && value instanceof klass);
+  };
+}
+
+export const isArray = classChecker(Array);
+export const isBoolean = classChecker(Boolean);
+export const isDate = classChecker(Date);
+export const isError = classChecker(Error);
+export const isFunction = classChecker(Function);
+export const isNumber = classChecker(Number);
+export const isObject = classChecker(Object);
+export const isRegExp = classChecker(RegExp);
+export const isString = classChecker(String);
+export const isSymbol = classChecker(Symbol);

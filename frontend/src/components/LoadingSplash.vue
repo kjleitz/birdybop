@@ -8,17 +8,9 @@
   </div>
 </template>
 
-<script lang="ts">
-import Vue from 'vue';
-
-export default Vue.extend({
-  name: "LoadingSplash",
-});
-</script>
-
 <style lang="scss">
 $spinner-width: 0.25rem;
-$spinner-color: #d4d4d4;
+$spinner-color: var(--text-light);
 
 @keyframes dizzy-spin {
   0% {
@@ -103,7 +95,7 @@ $spinner-color: #d4d4d4;
 }
 
 .loading-splash {
-  background-color: white;
+  background-color: var(--bg);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -138,8 +130,8 @@ $spinner-color: #d4d4d4;
     }
 
     .mask {
-      background-color: white;
-      border: $spinner-width solid white;
+      background-color: var(--bg);
+      border: $spinner-width solid var(--bg);
       animation-timing-function: step-start;
       z-index: 10;
       animation-name: appear-mask;

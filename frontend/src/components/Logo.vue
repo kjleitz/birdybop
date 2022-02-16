@@ -6,14 +6,6 @@
   </h1>
 </template>
 
-<script lang="ts">
-import Vue from 'vue';
-
-export default Vue.extend({
-  name: "Logo",
-});
-</script>
-
 <style lang="scss">
 h1.logo {
   font-family: Helvetica;
@@ -22,6 +14,7 @@ h1.logo {
   a {
     text-decoration: none;
     color: inherit;
+    // color: var(--accent);
   }
 }
 </style>

@@ -1,7 +1,73 @@
 @import "../../node_modules/simpledotcss/simple.min.css";
 
-// Customization/CSS variables go below.
+@mixin theme-light {
+  --accent-bg: #f5f7ff;
+  --accent: #0d47a1;
+  --bg: #fff;
+  --border: #d8dae1;
+  --code: #d81b60;
+  --disabled: #efefef;
+  --downvote: slateblue;
+  --preformatted: #444;
+  --text-light: #585858;
+  --text: #212121;
+  --upvote: orangered;
+}
 
-// :root {
-//   --accent: red;
-// }
+@mixin theme-dark {
+  --accent-bg: #2b2b2b;
+  --accent: #ffb300;
+  --bg: #212121;
+  --border: #666;
+  --code: #f06292;
+  --disabled: #111;
+  --downvote: slateblue;
+  --preformatted: #ccc;
+  --text-light: #ababab;
+  --text: #dcdcdc;
+  --upvote: orangered;
+}
+
+@mixin misc-variables {
+  // I don't love that this isn't a multiple of 0.25rem but simple.css uses this
+  // same 5px border-radius for a lot so I'm not going to rock the boat
+  --border-radius: 5px;
+}
+
+:root {
+  color-scheme: light dark;
+  @include theme-light;
+  @include misc-variables;
+  //// Not theme-dependent, and set already by simple.css:
+  // --sans-font: -apple-system,BlinkMacSystemFont,"Avenir Next",Avenir,"Nimbus Sans L",Roboto,Noto,"Segoe UI",Arial,Helvetica,"Helvetica Neue",sans-serif;
+  // --mono-font: Consolas,Menlo,Monaco,"Andale Mono","Ubuntu Mono",monospace;
+  // --marked: #ffdd33;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    @include theme-light;
+
+    &.light {
+      @include theme-light;
+    }
+
+    &.dark {
+      @include theme-dark;
+    }
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    @include theme-dark;
+
+    &.light {
+      @include theme-light;
+    }
+
+    &.dark {
+      @include theme-dark;
+    }
+  }
+}

@@ -1,50 +1,50 @@
 <template>
-  <div id="app">
-    <router-view/>
-  </div>
+  <router-view/>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import { catchHttpCode } from "@/lib/error-filters";
-import store from "@/store";
-import Vue from "vue";
+import { useNavigationStore } from "@/stores/navigation";
+import { useSessionStore } from "@/stores/session";
+import { useRouter } from "vue-router";
 
-export default Vue.extend({
-  name: "App",
+const sessionStore = useSessionStore();
+const navigationStore = useNavigationStore();
+const router = useRouter();
 
-  created(): void {
-    store.dispatch("refreshSession").then(() => {
-      console.log("Authenticated visitor.");
-      const { intendedDestination } = store.state;
-      if (intendedDestination) this.$router.push(intendedDestination);
-    }).catch(catchHttpCode(401, (error) => {
-      console.log("Unauthenticated visitor:", error.message);
-    })).catch((error) => {
-      console.error(error);
-    });
-  },
+sessionStore.refreshSession().then(() => {
+  const { intendedDestination } = navigationStore;
+  if (intendedDestination) router.push(intendedDestination);
+}).catch(catchHttpCode(401, (error) => {
+  console.log("Unauthenticated visitor:", error.message);
+})).catch((error) => {
+  console.error(error);
 });
 </script>
 
 <style lang="scss">
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+// for this: https://github.com/kevquirk/simple.css/issues/48#issuecomment-1021525315
+:root {
+  --reading-width: min(45rem, 90%);
+}
+// (and this)
+body {
+  grid-template-columns: 0fr 100% 0fr;
+}
+
+body, body * {
+  box-sizing: border-box;
+}
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
 }
 
 .fade-enter-active, .fade-leave-active {

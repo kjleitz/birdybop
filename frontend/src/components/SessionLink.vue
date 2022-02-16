@@ -1,78 +1,47 @@
 <template>
   <div class="session-link">
+    <!-- <Checkbox v-model="darkMode">dark</Checkbox> -->
+    <Checkbox v-model:checked="darkMode">dark</Checkbox>
     <router-link v-if="!isLoggedIn" :to="{ name: 'SignIn' }">Sign in</router-link>
-    <dropdown v-else right>
+    <Dropdown v-else right>
       <template #label>{{ username }}</template>
       <template #items>
         <a href="#">foobar1</a>
         <a href="#">foobar2</a>
-        <a href="#">foobar3</a>
+        <a href="#" @click.prevent="logOut">Sign out</a>
       </template>
-    </dropdown>
-    <checkbox v-model="darkMode">dark</checkbox>
+    </Dropdown>
+    <!-- <nav>
+      <a href="#" class="light">light</a>
+      <button href="#" class="dark">dark</button>
+      <button href="#" class="auto">auto</button>
+    </nav> -->
   </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import { toastError } from "@/components/mixins/toasts";
-import store from "@/store";
-import Vue from "vue";
-import { mapActions, mapGetters } from "vuex";
-// import {
-//   BDropdown,
-//   BDropdownItem,
-//   BDropdownDivider,
-// } from "bootstrap-vue";
+import { computed, ref, watch } from "vue";
 import Checkbox from "@/components/Checkbox.vue";
 import Dropdown from "@/components/Dropdown.vue";
+import { usePreferencesStore } from "@/stores/preferences";
+import { useSessionStore } from "@/stores/session";
+import { useUserStore } from "@/stores/user";
 
-export default Vue.extend({
-  name: "SessionLink",
+const preferencesStore = usePreferencesStore();
+const sessionStore = useSessionStore();
+const userStore = useUserStore();
 
-  components: {
-    // BDropdown,
-    // BDropdownItem,
-    // BDropdownDivider,
-    Checkbox,
-    Dropdown,
-  },
+const darkMode = ref(preferencesStore.darkMode);
 
-  data() {
-    return {
-      darkMode: store.state.darkMode,
-    };
-  },
+const isLoggedIn = computed(() => sessionStore.isLoggedIn);
+const username = computed(() => userStore.user.attributes.username);
+// const userId = computed(() => store.user.id);
 
-  computed: {
-    ...mapGetters(["isLoggedIn"]),
+watch(darkMode, (newVal, _oldVal) => preferencesStore.setDarkMode(newVal));
 
-    username(): string {
-      return store.state.user.attributes.username;
-    },
-
-    userId(): string {
-      return store.state.user.id;
-    },
-  },
-
-  watch: {
-    darkMode(newVal: boolean, _oldVal: boolean): void {
-      store.commit("setDarkMode", newVal);
-    },
-  },
-
-  methods: {
-    ...mapActions(["deleteSession"]),
-
-    toastError,
-
-    logOut(): void {
-      this.deleteSession().catch((error) => {
-        this.toastError(error.message);
-      });
-    },
-  },
-});
+const deleteSession = () => sessionStore.deleteSession();
+const logOut = () => deleteSession().catch((error) => toastError(error.message));
 </script>
 
 <style lang="scss">
@@ -82,5 +51,9 @@ export default Vue.extend({
   justify-content: flex-end;
   align-items: center;
   padding: 0.25rem 1rem;
+
+  * + * {
+    margin-left: 1rem;
+  }
 }
 </style>

@@ -7,115 +7,77 @@
         :disabled="searching"
         name="search"
         placeholder="Search"
+        class="search-input"
         @keydown.prevent.exact.enter="submitSearch"
       />
       <button
         :disabled="searching"
         type="submit"
+        class="search-button"
         @click="submitSearch"
       >
         <!-- TODO: spinner -->
-        <span class="magnifying-glass">&#x26B2;</span>
+        <UnicodeIcon name="magnifying-glass" :rotate-degrees="-45" />
       </button>
     </form>
-
-    <!-- <b-input-group size="lg">
-      <b-form-input
-        v-model="searchQuery"
-        :disabled="searching"
-        :autofocus="!searchQuery"
-        type="search"
-        placeholder="Search"
-        @keydown.prevent.exact.enter="submitSearch"
-      ></b-form-input>
-
-      <b-input-group-append>
-        <b-button
-          :disabled="searching"
-          variant="primary"
-          size="lg"
-          @click="submitSearch"
-        >
-          <transition name="fade" mode="out-in">
-            <b-icon-search v-if="!searching" key="icon-search"/>
-            <b-icon-question-circle v-else key="icon-loading" animation="spin"/>
-          </transition>
-        </b-button>
-      </b-input-group-append>
-    </b-input-group> -->
   </div>
 </template>
 
-<script lang="ts">
-import Vue from 'vue';
-import store from '@/store';
-// import {
-//   BButton,
-//   BFormInput,
-//   BIconQuestionCircle,
-//   BIconSearch,
-//   BInputGroup,
-//   BInputGroupAppend,
-// } from "bootstrap-vue";
+<script setup lang="ts">
+import { computed, ref, watch } from "vue";
 import { filterNavDuplicated } from "@/lib/error-filters";
+import UnicodeIcon from "@/components/UnicodeIcon.vue";
+import { useRoute, useRouter, type LocationQueryValue } from "vue-router";
+import { useSearchStore } from "@/stores/search";
 
-export default Vue.extend({
-  name: "SearchBar",
+const store = useSearchStore();
+const route = useRoute();
+const router = useRouter();
 
-  components: {
-    // BButton,
-    // BFormInput,
-    // BIconQuestionCircle,
-    // BIconSearch,
-    // BInputGroup,
-    // BInputGroupAppend,
-  },
+const searchQuery = ref(store.query || route.query.q as LocationQueryValue || "");
 
-  data() {
-    return {
-      searchQuery: store.state.query || (this.$route.query.q as string) || "",
-    };
-  },
+const searching = computed(() => store.searching);
+const storeQuery = computed(() => store.query);
 
-  computed: {
-    searching(): boolean {
-      return store.state.searching;
-    },
-
-    storeQuery(): string {
-      return store.state.query;
-    },
-  },
-
-  watch: {
-    storeQuery(newVal: string, oldVal: string): void {
-      if (newVal !== oldVal && newVal !== this.searchQuery) this.searchQuery = newVal;
-    },
-  },
-
-  methods: {
-    submitSearch(): void {
-      if (!this.searchQuery) return;
-
-      this.$router.push({
-        name: "SearchResults",
-        query: { q: this.searchQuery },
-      }).catch(filterNavDuplicated);
-    },
-  },
+watch(storeQuery, (newVal, oldVal) => {
+  if (newVal !== oldVal && newVal !== searchQuery.value) searchQuery.value = newVal;
 });
+
+const submitSearch = (): void => {
+  if (!searchQuery.value) return;
+
+  router.push({
+    name: "SearchResults",
+    query: { q: searchQuery.value },
+  }).catch(filterNavDuplicated);
+};
 </script>
 
 <style lang="scss">
-// .search-bar {
-//   max-width: 640px;
-//   width: 100%;
-// }
-
 .search-bar {
-  .magnifying-glass {
-    display: inline-block;
-    transform: rotate(-45deg);
+  position: relative;
+
+  form {
+    display: flex;
+    justify-content: stretch;
+    align-items: stretch;
+    width: 100%;
+    height: 100%;
+
+    .search-input {
+      flex-grow: 1;
+      margin: 0;
+    }
+
+    .search-button {
+      margin: 0 0 0 0.5rem;
+    }
+
+    .magnifying-glass {
+      display: inline-block;
+      transform: rotate(-45deg);
+    }
   }
+
 }
 </style>

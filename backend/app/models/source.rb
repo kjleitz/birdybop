@@ -57,6 +57,15 @@ class Source < ApplicationRecord
     def source_family(path)
       where(path: path_family(path))
     end
+
+    # e.g., "foo.com/bar/baz" => "/bar/baz"
+    def sub_path(path)
+      path.delete_prefix(domain(path))
+    end
+
+    def uri(path)
+      URI::HTTPS.build(host: domain(path), path: sub_path(path))
+    end
   end
 
   def path=(new_path)
@@ -141,6 +150,15 @@ class Source < ApplicationRecord
 
   def should_crawl?
     !crawled? || last_crawled_at < 1.week.ago
+  end
+
+  # e.g., "foo.com/bar/baz" => "/bar/baz"
+  def sub_path
+    Source.sub_path(path)
+  end
+
+  def uri
+    Source.uri(path)
   end
 
   # def upvote!(voter)

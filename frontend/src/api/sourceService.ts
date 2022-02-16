@@ -1,5 +1,6 @@
 import backendApi from "@/api/backendApi";
-import Source, { SourceCollectionResponse, SourceItemResponse } from "@/types/Source";
+import type Source from "@/types/Source";
+import type { SourceCollectionResponse, SourceItemResponse } from "@/types/Source";
 
 export interface SourceCreateParams {
   name: string;
@@ -21,9 +22,9 @@ export function fetchSources(): Promise<Source[]> {
     .then(({ data }) => data);
 }
 
-export function fetchSource(id: number | string): Promise<Source> {
+export function fetchSource(path: string): Promise<Source> {
   return backendApi
-    .get<SourceItemResponse>(`/sources/${id}`)
+    .get<SourceItemResponse>(`/sources/${path}`)
     .then(({ data }) => data);
 }
 

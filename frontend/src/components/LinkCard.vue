@@ -1,38 +1,23 @@
 <template>
   <article class="link-card">
     <div class="vote-area">
-      <!-- <b-button
-        :pressed.sync="upvotePressed"
-        size="sm"
-        variant="outline-success"
-        class="upvote"
-        @click="$emit('upvote-clicked')"
-      >
-        <b-icon-caret-up-fill />
-      </b-button> -->
       <button
         :class="['upvote', { pressed: upvoted }]"
-        @click="$emit('upvote-clicked')"
+        @click="$emit('update:upvoted', !upvoted)"
       >
-        &#x2303;
+        <UnicodeIcon name="triangle-sm" direction="up"/>
       </button>
+
       <span class="karma">{{ karma }}</span>
-      <!-- <b-button
-        :pressed.sync="downvotePressed"
-        size="sm"
-        variant="outline-success"
-        class="downvote"
-        @click="$emit('downvote-clicked')"
-      >
-        <b-icon-caret-down-fill />
-      </b-button> -->
+
       <button
         :class="['downvote', { pressed: downvoted }]"
-        @click="$emit('downvote-clicked')"
+        @click="$emit('update:downvoted', !downvoted)"
       >
-        &#x2304;
+        <UnicodeIcon name="triangle-sm" direction="down"/>
       </button>
     </div>
+
     <div class="info-area">
       <a :href="url" class="link-url">{{ url }}</a>
       <a :href="url" class="link-title">{{ title }}</a>
@@ -44,79 +29,45 @@
   </article>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-// import {
-//   BButton,
-//   BIconCaretDownFill,
-//   BIconCaretUpFill,
-// } from "bootstrap-vue";
+<script setup lang="ts">
+import { isA } from "@/lib/validators";
+import UnicodeIcon from "@/components/UnicodeIcon.vue";
 
-export default Vue.extend({
-  name: "LinkCard",
-
-  components: {
-    // BButton,
-    // BIconCaretDownFill,
-    // BIconCaretUpFill,
+defineProps({
+  karma: {
+    type: Number,
+    default: 0,
   },
 
-  props: {
-    karma: {
-      type: Number,
-      default: 0,
-    },
-
-    url: {
-      type: String,
-      required: true,
-    },
-
-    title: {
-      type: String,
-      required: true,
-    },
-
-    description: {
-      type: String,
-      default: "",
-    },
-
-    upvoted: {
-      type: Boolean,
-      default: false,
-    },
-
-    downvoted: {
-      type: Boolean,
-      default: false,
-    },
+  url: {
+    type: String,
+    required: true,
   },
 
-  // data() {
-  //   return {
-  //     upvotePressed: this.upvoted,
-  //     downvotePressed: this.downvoted,
-  //   };
-  // },
+  title: {
+    type: String,
+    required: true,
+  },
 
-  // watch: {
-  //   upvoted(newVal: boolean, oldVal: boolean): void {
-  //     if (newVal !== oldVal && newVal !== this.upvotePressed) this.upvotePressed = newVal;
-  //   },
+  description: {
+    type: String,
+    default: "",
+  },
 
-  //   downvoted(newVal: boolean, oldVal: boolean): void {
-  //     if (newVal !== oldVal && newVal !== this.downvotePressed) this.downvotePressed = newVal;
-  //   },
+  upvoted: {
+    type: Boolean,
+    default: false,
+  },
 
-  //   upvotePressed(newVal: boolean, oldVal: boolean): void {
-  //     if (newVal !== oldVal && newVal !== this.upvoted) this.$emit("update:upvoted", newVal);
-  //   },
+  downvoted: {
+    type: Boolean,
+    default: false,
+  },
+});
 
-  //   downvotePressed(newVal: boolean, oldVal: boolean): void {
-  //     if (newVal !== oldVal && newVal !== this.downvoted) this.$emit("update:downvoted", newVal);
-  //   },
-  // },
+defineEmits({
+  "update:upvoted": isA(Boolean),
+  "update:downvoted": isA(Boolean),
 });
 </script>
 
@@ -137,13 +88,13 @@ export default Vue.extend({
 
     .upvote {
       &.pressed {
-        color: orangered;
+        color: var(--upvote);
       }
     }
 
     .downvote {
       &.pressed {
-        color: slateblue;
+        color: var(--downvote);
       }
     }
   }
@@ -156,17 +107,13 @@ export default Vue.extend({
   }
 
   .link-url {
-    color: #555;
+    color: var(--text-light);
     font-size: 0.875em;
     line-height: 1;
   }
 
   .link-title {
     font-size: 1.25em;
-  }
-
-  .link-description {
-    // color: #333;
   }
 }
 </style>

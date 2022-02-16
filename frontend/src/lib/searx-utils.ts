@@ -1,4 +1,4 @@
-import SearxResults from "@/types/SearxResults";
+import type SearxResults from "@/types/SearxResults";
 
 export function createBlankSearxResults(attributes: Partial<SearxResults> = {}): SearxResults {
   return {

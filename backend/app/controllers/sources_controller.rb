@@ -15,7 +15,23 @@ class SourcesController < ApplicationController
 
   # GET /sources/1
   def show
-    source = Source.find(params[:id])
+    source = if Utils.numeric?(params[:id])
+      Source.find(params[:id])
+    else
+      encoded_source_path = params[:id]
+      path = Utils.decode_uri_component_base64(encoded_source_path)
+      source_for_path = Source.where(path: path).first_or_initialize
+
+      if source_for_path.new_record?
+        page_info = page_info_for(path)
+        source_for_path.name = page_info[:title]
+        source_for_path.description = page_info[:description]
+        source_for_path.submitter = current_user
+      end
+
+      source_for_path
+    end
+
     authorize(source)
     render json: SourceSerializer.new(source).as_json
   end
@@ -62,5 +78,19 @@ class SourcesController < ApplicationController
 
   def source_params
     params.require(:source).permit(:name, :description, :path)
+  end
+
+  def page_info_for(path)
+    Rails.cache.fetch("source:#{Utils.encode_base64(path)}:page_info", expires_in: 10.minutes) do
+      faraday = Faraday.new { |f| f.use BirdybopFaradayMiddleware::FollowRedirects }
+      response = faraday.get(Source.uri(path))
+      document = Nokogiri::HTML(response.body)
+      description = document.css('meta[name="description"]').first&.text || ""
+
+      {
+        title: document.title,
+        description: description,
+      }
+    end
   end
 end

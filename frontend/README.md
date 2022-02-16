@@ -48,3 +48,11 @@ pnpm run test:unit
 ## TODO
 
 - literally everything
+
+### Migrating to Vue 3
+
+- disable TS server in this workspace to use Volar's "Takeover Mode" when finished
+- migrate tests over
+- remove `tsconfig.test.json` and `vue.config.js`
+- move to `pinia`
+- remove `public/index.html`

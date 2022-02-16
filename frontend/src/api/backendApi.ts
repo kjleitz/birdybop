@@ -1,17 +1,17 @@
 import BirdybopError from "@/lib/BirdybopError";
-import JsonApi from "@/types/JsonApi";
+import type JsonApi from "@/types/JsonApi";
 import axios, { Axios } from "axios";
 
 const {
-  VUE_APP_BACKEND_BASE_URL = "http://localhost:3000",
-} = process.env;
+  VITE_BACKEND_BASE_URL = "http://localhost:3000",
+} = import.meta.env;
 
 class BackendApi {
   public axiosInstance: Axios;
 
   constructor() {
     this.axiosInstance = axios.create({
-      baseURL: VUE_APP_BACKEND_BASE_URL,
+      baseURL: VITE_BACKEND_BASE_URL as string,
       withCredentials: true,
     });
   }

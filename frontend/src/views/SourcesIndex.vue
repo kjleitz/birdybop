@@ -1,7 +1,7 @@
 <template>
   <div class="sources-index-view">
     <section class="source-cards">
-      <source-card
+      <SourceCard
         v-for="source in sources"
         :key="source.id"
         :source="source"
@@ -11,32 +11,19 @@
   </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import store from "@/store";
-import Source from "@/types/Source";
+<script setup lang="ts">
+import { computed, onMounted } from "vue";
 import SourceCard from "@/components/SourceCard.vue";
+import { useCollectionsStore } from "@/stores/collections";
+import { useSourcesStore } from "@/stores/sources";
 
-export default Vue.extend({
-  name: "SourcesIndex",
+const collectionsStore = useCollectionsStore();
+const sourcesStore = useSourcesStore();
 
-  components: {
-    SourceCard,
-  },
+const sources = computed(() => collectionsStore.collections.source);
 
-  computed: {
-    sources(): Source[] {
-      return store.state.sources;
-    },
-  },
-
-  beforeRouteEnter(_to, _from, next): void {
-    if (!store.state.sources.length && !store.state.loadingSources) {
-      store.dispatch("fetchSources").then(() => next());
-    } else {
-      next();
-    }
-  },
+onMounted(() => {
+  if (!collectionsStore.collections.source.length && !sourcesStore.loadingSources) sourcesStore.fetchSources();
 });
 </script>
 

@@ -70,7 +70,7 @@ jobs:
         run: bundle exec rails test
 
   frontend:
-    name: Run tests and ESLint lints
+    name: Run typechecker, tests, and lints
 
     runs-on: ubuntu-latest
 
@@ -107,7 +107,10 @@ jobs:
       - name: Run ESLint lints
         run: pnpm run lint
 
-      - name: Run unit tests
+      - name: Run TypeScript type-checker
+        run: pnpm run typecheck
+
+      - name: Run Vitest tests
         run: pnpm run test:unit
 
       # - name: Run e2e tests

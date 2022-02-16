@@ -1,5 +1,5 @@
-import SearxInfobox from "@/types/SearxInfobox";
-import SearxResult from "@/types/SearxResult";
+import type SearxInfobox from "@/types/SearxInfobox";
+import type SearxResult from "@/types/SearxResult";
 
 export default interface SearxResults {
   query: string;

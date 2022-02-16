@@ -12,4 +12,5 @@ RUN pnpm install
 
 COPY . .
 
-CMD ["pnpm", "run", "serve", "--aggregate-output"]
+CMD ["pnpm", "run", "dev"]
+# ENTRYPOINT ["./entrypoints/docker-entrypoint.sh"]

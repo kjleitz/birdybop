@@ -18,4 +18,12 @@ bundle check || bundle install
 #   Rails server route incoming requests to the container IP rather than to the
 #   default `localhost`.
 #
-bundle exec rails s -b 0.0.0.0
+# From [this helpful article](https://vsupalov.com/docker-compose-stop-slow/#where-are-my-signals)
+# because stopping the running container is taking forever:
+#
+#   [...] Another possible cause, is if you run your process from an entrypoint
+#   script without using exec. With exec, your process “takes the place” and
+#   gets all signals, otherwise they are received and kept by the entrypoint
+#   script.
+#
+exec bundle exec rails s -b 0.0.0.0

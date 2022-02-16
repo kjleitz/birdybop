@@ -30,6 +30,9 @@ Layout/FirstHashElementIndentation:
 Layout/MultilineAssignmentLayout:
   EnforcedStyle: same_line
 
+Layout/MultilineMethodCallIndentation:
+  EnforcedStyle: indented
+
 Layout/LineLength:
   Enabled: false
 

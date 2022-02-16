@@ -1,4 +1,4 @@
-import User from "@/types/User";
+import type User from "@/types/User";
 
 export function createBlankUser(attributes: Partial<User["attributes"]> = {}): User {
   return {

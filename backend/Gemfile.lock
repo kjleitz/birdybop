@@ -196,6 +196,7 @@ DEPENDENCIES
   jsonapi-serializer (~> 2.2)
   jwt (~> 2.3)
   listen (~> 3.3)
+  nokogiri (~> 1.12)
   pg (~> 1.1)
   pg_search (~> 2.3)
   pry

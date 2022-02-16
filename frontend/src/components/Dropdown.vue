@@ -5,6 +5,7 @@
     the menu) and you want it to close after the link's "clicked."
    -->
   <span
+    ref="$el"
     :class="['dropdown', { right, left }]"
     @keydown.prevent.exact.up="focusPrevItem"
     @keydown.prevent.exact.down="focusNextItem"
@@ -13,122 +14,118 @@
     @focusout="handleChildBlur"
   >
     <a
-      ref="label"
+      ref="$label"
       tabindex="0"
       href="#"
       :class="['label', { expanded, right, left }]"
       @click.prevent="expanded = !expanded"
       @keydown.prevent.exact.enter="expanded = !expanded"
     >
-      <unicode-icon v-if="left" name="triangle-sm" :direction="expanded ? 'up' : 'down'" />
+      <UnicodeIcon v-if="left" name="triangle-sm" :direction="triangleDirection" />
       <slot name="label"></slot>
-      <unicode-icon v-if="right" name="triangle-sm" :direction="expanded ? 'up' : 'down'" />
+      <UnicodeIcon v-if="right" name="triangle-sm" :direction="triangleDirection" />
     </a>
-    <nav ref="menu" v-show="expanded" :class="['menu', { right, left }]">
+    <nav ref="$menu" v-show="expanded" :class="['menu', { right, left }]">
       <slot name="items"></slot>
     </nav>
   </span>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
+<script setup lang="ts">
 import UnicodeIcon from "@/components/UnicodeIcon.vue";
 import { bound } from "@/lib/utils";
+import { computed, nextTick, ref } from "vue";
 
-export default Vue.extend({
-  name: "Dropdown",
+// PROPS
 
-  components: {
-    UnicodeIcon,
-  },
-
-  props: {
-    right: {
-      type: Boolean,
-      default: false,
-    },
-  },
-
-  data() {
-    return {
-      expanded: false,
-      focusIndex: -1,
-    };
-  },
-
-  computed: {
-    left(): boolean {
-      return !this.right;
-    },
-
-    collapsed(): boolean {
-      return !this.expanded;
-    },
-  },
-
-  methods: {
-    collapse(): void {
-      this.expanded = false;
-    },
-
-    expand(): void {
-      this.expanded = true;
-    },
-
-    focusItem(index: number): void {
-      const $items = (this.$refs.menu as HTMLElement).children;
-      this.focusIndex = bound(index, -1, $items.length - 1);
-
-      if (this.focusIndex < 0) {
-        if (this.expanded) this.collapse();
-        (this.$refs.label as HTMLElement).focus();
-      } else {
-        if (this.collapsed) this.expand();
-        const $item = $items[this.focusIndex] as HTMLElement;
-        if ($item) $item.focus();
-      }
-    },
-
-    focusPrevItem(): void {
-      if (this.focusIndex > -1) this.focusIndex -= 1;
-
-      this.focusItem(this.focusIndex);
-    },
-
-    focusNextItem(): void {
-      if (!this.expanded) {
-        this.expanded = true;
-        this.$nextTick(() => this.focusItem(0));
-      } else {
-        this.focusItem(this.focusIndex + 1);
-      }
-    },
-
-    // HOLY SHIT THIS WORKS SO WELL
-    handleChildBlur(event: FocusEvent): void {
-      const $newlyFocusedElement = event.relatedTarget as HTMLElement | null;
-      const isChildOfThisElement = this.$el.contains($newlyFocusedElement);
-      if (isChildOfThisElement) return;
-
-      this.expanded = false;
-    },
+const props = defineProps({
+  right: {
+    type: Boolean,
+    default: false,
   },
 });
+
+// REFS
+
+const $el = ref<HTMLSpanElement>();
+const $menu = ref<HTMLElement>();
+const $label = ref<HTMLAnchorElement>();
+
+// DATA
+
+const expanded = ref(false);
+const focusIndex = ref(-1);
+
+// COMPUTED
+
+const left = computed(() => !props.right);
+const collapsed = computed(() => !expanded.value);
+const triangleDirection = computed(() => expanded.value ? "up" : "down");
+
+// METHODS
+
+const collapse = (): void => {
+  expanded.value = false;
+};
+
+const expand = (): void => {
+  expanded.value = true;
+};
+
+const focusItem = (index: number): void => {
+  const $items = $menu.value?.children;
+  if (!$items) return;
+
+  focusIndex.value = bound(index, -1, $items.length - 1);
+
+  if (focusIndex.value < 0) {
+    if (expanded.value) collapse();
+    $label.value?.focus();
+  } else {
+    if (collapsed.value) expand();
+    const $item = $items[focusIndex.value] as HTMLElement;
+    if ($item) $item.focus();
+  }
+};
+
+const focusPrevItem = (): void => {
+  if (focusIndex.value > -1) focusIndex.value -= 1;
+
+  focusItem(focusIndex.value);
+};
+
+const focusNextItem = (): void => {
+  if (!expanded.value) {
+    expanded.value = true;
+    nextTick(() => focusItem(0));
+  } else {
+    focusItem(focusIndex.value + 1);
+  }
+};
+
+// HOLY SHIT THIS WORKS SO WELL
+const handleChildBlur = (event: FocusEvent): void => {
+  const $newlyFocusedElement = event.relatedTarget as HTMLElement | null;
+  const isChildOfThisElement = $el.value?.contains($newlyFocusedElement);
+  if (isChildOfThisElement) return;
+
+  expanded.value = false;
+};
 </script>
 
 <style lang="scss">
 .dropdown {
   display: inline-block;
   position: relative;
-  margin: 0 0.25rem;
+  // margin: 0 0.25rem;
 
-  // &.right {
-  //   margin-right: 0.25rem;
-  // }
+  &.right {
+    margin-right: 0.5rem;
+  }
 
-  // &.left {
-  //   margin-left: 0.25rem;
-  // }
+  &.left {
+    margin-left: 0.5rem;
+  }
 
   .menu {
     position: absolute;
@@ -138,8 +135,8 @@ export default Vue.extend({
     border-bottom: 1px solid var(--border);
     border-right: 1px solid var(--border);
     padding: 0;
-    border-bottom-left-radius: 5px;
-    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: var(--border-radius);
+    border-bottom-right-radius: var(--border-radius);
 
     &.right {
       right: 0;
@@ -159,6 +156,7 @@ export default Vue.extend({
       border-radius: unset;
       background-color: inherit;
       border-bottom: 1px solid var(--border);
+      white-space: nowrap;
 
       &:last-of-type {
         border-bottom: 0;

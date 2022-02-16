@@ -1,17 +1,19 @@
 <template>
   <div class="search-results-view">
-    <search-header />
+    <SearchHeader />
 
     <main class="birdybop-search-results">
-      <loading-splash v-if="searching" class="loading-splash"/>
+      <LoadingSplash v-if="searching" class="loading-splash"/>
 
       <template v-if="!searching && !results.length">
-        No results found for "{{ query }}"
+        <p>
+          No results found for "{{ query }}"
+        </p>
       </template>
       <template v-else>
-        <search-result
-          v-for="(result, index) in results"
-          :key="index"
+        <SearchResult
+          v-for="result in results"
+          :key="result.attributes.url"
           :result="result"
           :sources="result.relationships.sources"
         />
@@ -20,54 +22,35 @@
   </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import store from "@/store";
-import SearxResult from "@/types/SearxResult";
+<script setup lang="ts">
+import { computed, onMounted } from "vue";
+import { onBeforeRouteUpdate, useRoute } from "vue-router";
 import LoadingSplash from "@/components/LoadingSplash.vue";
 import SearchHeader from "@/components/SearchHeader.vue";
-import SearchResultComponent from "@/components/SearchResult.vue";
+import SearchResult from "@/components/SearchResult.vue";
+import { useSearchStore } from "@/stores/search";
+import { useCollectionsStore } from "@/stores/collections";
 
-export default Vue.extend({
-  name: 'SearchResults',
+const collectionsStore = useCollectionsStore();
+const searchStore = useSearchStore();
+const route = useRoute();
 
-  components: {
-    LoadingSplash,
-    SearchHeader,
-    SearchResult: SearchResultComponent,
-  },
+const results = computed(() => collectionsStore.collections.searxResult);
+const searching = computed(() => searchStore.searching);
+const query = computed(() => searchStore.query);
 
-  computed: {
-    results(): SearxResult[] {
-      return store.state.results;
-    },
+onMounted(() => {
+  const q = (route.query.q as string) || "";
+  if (q && q !== query.value && !searching.value) searchStore.search(q);
+});
 
-    searching(): boolean {
-      return store.state.searching;
-    },
-
-    query(): string {
-      return store.state.query;
-    },
-  },
-
-  beforeRouteEnter(to, _from, next): void {
-    const query = (to.query.q as string) || "";
-    if (query && query !== store.state.query && !store.state.searching) {
-      store.dispatch("search", query).then(() => next());
-    } else {
-      next();
-    }
-  },
-
-  beforeRouteUpdate(to, _from, next): void {
-    const query = (to.query.q as string) || "";
-    if (query && query !== store.state.query && !store.state.searching) {
-      store.dispatch("search", query).then(() => next());
-    } else {
-      next();
-    }
-  },
+onBeforeRouteUpdate((to, _from, next) => {
+  const q = (to.query.q as string) || "";
+  if (q && q !== query.value && !searching.value) {
+    searchStore.search(q).then(() => next());
+  } else {
+    next();
+  }
 });
 </script>
 

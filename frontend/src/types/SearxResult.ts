@@ -1,5 +1,5 @@
-import JsonApi from "@/types/JsonApi";
-import Source from "@/types/Source";
+import type JsonApi from "@/types/JsonApi";
+import type Source from "@/types/Source";
 
 export interface SearxResultAttributes {
   title: string;

@@ -22,6 +22,6 @@ export class Logger {
   }
 }
 
-const logger = new Logger(() => process.env.NODE_ENV !== "production");
+const logger = new Logger(() => import.meta.env.NODE_ENV !== "production");
 
 export default logger;

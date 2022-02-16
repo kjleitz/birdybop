@@ -1,4 +1,4 @@
-import JsonApi from "@/types/JsonApi";
+import type JsonApi from "@/types/JsonApi";
 
 export interface UserAttributes {
   username: string;
