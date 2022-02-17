@@ -25,6 +25,13 @@ jobs:
         shell: bash
         working-directory: ./backend
 
+    env:
+      POSTGRES_DB: birdybop_development
+      POSTGRES_USER: birdybop
+      POSTGRES_PASSWORD: birdybop
+      POSTGRES_HOST: postgres
+      REDIS_HOST: redis
+
     services:
       postgres:
         image: postgres:alpine
