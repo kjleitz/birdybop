@@ -82,7 +82,7 @@ class Source < ApplicationRecord
           title: document.title,
           description: description,
         }
-      rescue Faraday::ConnectionFailed => e
+      rescue Faraday::ConnectionFailed => _e
         {
           title: path.gsub("/", "-").titleize,
           description: "",
