@@ -27,7 +27,7 @@ export const useSourcesStore = defineStore("sources", {
       this.setLoadingSources(true);
       const collectionsStore = useCollectionsStore();
       return fetchSources().then((sources) => {
-        collectionsStore.addToCollection(sources);
+        collectionsStore.addToCollection(sources, source => source.attributes.path);
       }).finally(() => {
         this.setLoadingSources(false);
       });
@@ -38,7 +38,7 @@ export const useSourcesStore = defineStore("sources", {
       const encodedSourcePath = encodeUriComponentBase64(path);
       const collectionsStore = useCollectionsStore();
       return fetchSource(encodedSourcePath).then((source) => {
-        collectionsStore.addToCollection(source);
+        collectionsStore.addToCollection(source, source => source.attributes.path);
       }).finally(() => {
         this.setLoadingSource(false);
       });
@@ -48,7 +48,7 @@ export const useSourcesStore = defineStore("sources", {
       this.setCreatingSource(true);
       const collectionsStore = useCollectionsStore();
       return createSource(params).then((source) => {
-        collectionsStore.addToCollection(source);
+        collectionsStore.addToCollection(source, source => source.attributes.path);
       }).finally(() => {
         this.setCreatingSource(false);
       });

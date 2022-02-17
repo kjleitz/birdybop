@@ -3,7 +3,7 @@
     <div class="vote-area">
       <button
         :class="['upvote', { pressed: upvoted }]"
-        @click="$emit('update:upvoted', !upvoted)"
+        @click="emit('update:upvoted', !upvoted)"
       >
         <UnicodeIcon name="triangle-sm" direction="up"/>
       </button>
@@ -65,7 +65,7 @@ defineProps({
   },
 });
 
-defineEmits({
+const emit = defineEmits({
   "update:upvoted": isA(Boolean),
   "update:downvoted": isA(Boolean),
 });

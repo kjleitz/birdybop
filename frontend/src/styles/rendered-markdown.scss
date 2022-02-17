@@ -1,0 +1,59 @@
+// TODO: consider making these true across the site
+
+.rendered-markdown {
+  h1 {
+    font-size: 2rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  h3 {
+    font-size: 1.25rem;
+  }
+
+  h4 {
+    font-size: 1rem;
+  }
+
+  h5 {
+    font-size: 1rem;
+    color: var(--text-light);
+  }
+
+  h6 {
+    font-size: 1rem;
+    font-style: italic;
+    color: var(--text-light);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  blockquote {
+    font-style: normal;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-left-color: var(--border);
+    margin-left: 0.5rem;
+    padding-top: 0;
+    padding-bottom: 0;
+    // font-size: 0.875rem;
+    font-size: smaller;
+  }
+
+  p,
+  blockquote {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    // line-height: 1.5;
+  }
+}

@@ -12,7 +12,9 @@ export interface SourceAttributes {
   updatedAt: string;
 }
 
-// type Source = JsonApi.Document<"source", SourceAttributes>;
+// export type SourceRelationships = {
+//   comments: JsonApi.CollectionRelationshipDetails;
+// };
 
 export type SourceRelationships = undefined;
 export type SourceLinks = undefined;

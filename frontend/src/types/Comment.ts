@@ -1,18 +1,26 @@
 import type JsonApi from "@/types/JsonApi";
 
+export type CommentSection = "discussion" | "q_and_a" | "warnings" | "tips";
+
 export interface CommentAttributes {
   authorId: number;
-  parentId: number;
-  sourceId: number;
+  authorUsername: number;
   body: string;
-  section: string;
   commentsCount: string;
   karma: number;
+  parentId: number;
+  section: CommentSection;
+  sourceId: number;
   createdAt: string;
   updatedAt: string;
 }
 
-export type CommentRelationships = undefined;
+export type CommentRelationships = {
+  children: JsonApi.CollectionRelationshipDetails;
+};
+
+// export type CommentRelationships = undefined;
+
 export type CommentLinks = undefined;
 export type CommentMeta = undefined;
 

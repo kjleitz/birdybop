@@ -34,18 +34,36 @@ export function stringifyError(error: any, defaultMessage = "Something went wron
   return defaultMessage;
 }
 
-export function uniqInPlace<T>(list: T[], toKey = (item: T): any => item): void {
+export function uniqInPlace<T>(list: T[], toKey = (item: T): any => item, reverse = false): void {
   const seen = {} as Record<string, boolean>;
-  let i = 0;
+  let i;
 
-  while (i < list.length) {
-    const key = toKey(list[i]);
+  if (reverse) {
+    i = list.length - 1;
 
-    if (seen[key]) {
-      list.splice(i, 1);
-    } else {
-      seen[key] = true;
-      i += 1;
+    while (i >= 0) {
+      const key = toKey(list[i]);
+
+      if (seen[key]) {
+        list.splice(i, 1);
+      } else {
+        seen[key] = true;
+      }
+
+      i -= 1;
+    }
+  } else {
+    i = 0;
+
+    while (i < list.length) {
+      const key = toKey(list[i]);
+
+      if (seen[key]) {
+        list.splice(i, 1);
+      } else {
+        seen[key] = true;
+        i += 1;
+      }
     }
   }
 }

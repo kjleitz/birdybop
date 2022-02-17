@@ -1,5 +1,6 @@
 import { uniqInPlace } from "@/lib/utils";
 import type Comment from "@/types/Comment";
+import type JsonApi from "@/types/JsonApi";
 import type SearxResult from "@/types/SearxResult";
 import type Source from "@/types/Source";
 import type User from "@/types/User";
@@ -27,7 +28,7 @@ export const useCollectionsStore = defineStore("collections", {
   }),
 
   actions: {
-    addToCollection(resourceData: CollectionItem | CollectionItem[]): void {
+    addToCollection<T extends CollectionItem>(resourceData: T | T[], toKey = (item: T) => item.id): void {
       if (!resourceData) return;
 
       const collections = this.collections;
@@ -46,10 +47,21 @@ export const useCollectionsStore = defineStore("collections", {
       }
 
       types.forEach((itemType) => {
-        const collection = collections[itemType] as CollectionItem[];
-        uniqInPlace(collection, item => item.id);
+        // const collection = collections[itemType] as CollectionItem[];
+        const collection = collections[itemType] as T[];
+        // uniqInPlace(collection, item => item.id, true);
+        uniqInPlace(collection, toKey, true);
       });
     },
+
+    // replaceInCollection(resourceData: CollectionItem, toKey = (item: CollectionItem) => item.id): void {
+    //   if (!resourceData) return;
+
+    //   const collection = this.collections[resourceData.type];
+    //   const dataKey = toKey(resourceData);
+    //   const itemIndex = collection.findIndex((item) => toKey(item) === dataKey);
+    //   collection.splice(itemIndex, 1, resourceData);
+    // },
 
     clearCollection(collectionType: CollectionType): void {
       this.collections[collectionType] = [];

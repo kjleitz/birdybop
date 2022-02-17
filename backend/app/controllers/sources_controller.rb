@@ -23,7 +23,7 @@ class SourcesController < ApplicationController
       source_for_path = Source.where(path: path).first_or_initialize
 
       if source_for_path.new_record?
-        page_info = page_info_for(path)
+        page_info = Source.fetch_page_info_for_path(path)
         source_for_path.name = page_info[:title]
         source_for_path.description = page_info[:description]
         source_for_path.submitter = current_user
@@ -78,19 +78,5 @@ class SourcesController < ApplicationController
 
   def source_params
     params.require(:source).permit(:name, :description, :path)
-  end
-
-  def page_info_for(path)
-    Rails.cache.fetch("source:#{Utils.encode_base64(path)}:page_info", expires_in: 10.minutes) do
-      faraday = Faraday.new { |f| f.use BirdybopFaradayMiddleware::FollowRedirects }
-      response = faraday.get(Source.uri(path))
-      document = Nokogiri::HTML(response.body)
-      description = document.css('meta[name="description"]').first&.text || ""
-
-      {
-        title: document.title,
-        description: description,
-      }
-    end
   end
 end

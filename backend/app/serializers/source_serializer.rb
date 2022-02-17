@@ -4,32 +4,32 @@ class SourceSerializer
   set_key_transform :camel_lower
 
   attributes(*%i[
-    submitter_id
-    name
-    description
-    path
-    karma
     comments_count
     created_at
+    description
+    karma
+    name
+    path
+    submitter_id
     updated_at
   ])
 
-  # # TODO: remove/nerf
-  # # TODO: remove/nerf
-  # # TODO: remove/nerf
-  # # TODO: remove/nerf
-  # # TODO: remove/nerf
-  # # TODO: remove/nerf
-  # # TODO: remove/nerf
-  # # TODO: remove/nerf
-  # # TODO: remove/nerf
-  # # TODO: remove/nerf
-  # # TODO: remove/nerf
-  # # TODO: remove/nerf
-  # # TODO: remove/nerf
-  # # TODO: remove/nerf
-  # # TODO: remove/nerf
-  # # TODO: remove/nerf
-  # # TODO: remove/nerf
+  # TODO: remove/nerf
+  # TODO: remove/nerf
+  # TODO: remove/nerf
+  # TODO: remove/nerf
+  # TODO: remove/nerf
+  # TODO: remove/nerf
+  # TODO: remove/nerf
+  # TODO: remove/nerf
+  # TODO: remove/nerf
+  # TODO: remove/nerf
+  # TODO: remove/nerf
+  # TODO: remove/nerf
+  # TODO: remove/nerf
+  # TODO: remove/nerf
+  # TODO: remove/nerf
+  # TODO: remove/nerf
+  # TODO: remove/nerf
   # has_many :comments
 end

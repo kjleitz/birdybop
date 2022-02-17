@@ -3,28 +3,59 @@ class CommentsController < ApplicationController
 
   # GET /sources/1/comments
   def index
-    source = Source.find(params[:source_id])
-    comments = policy_scope(source.comments)
-    render json: comments
+    source = find_source(params[:source_id])
+    comments = policy_scope(source.present? ? source.comments : Comment.none)
+    render json: CommentSerializer.new(comments, is_collection: true).as_json
   end
 
   # GET /comments/1
   def show
     comment = Comment.find(params[:id])
     authorize(comment)
-    render json: comment
+    render json: CommentSerializer.new(comment).as_json
   end
 
+  # TODO: this is awful, please refactor
   # POST /sources/1/comments
   def create
+    source = find_source(params[:source_id])
     comment = current_user.comments.build(comment_params)
-    comment.source_id = params[:source_id]
     authorize(comment)
 
-    if comment.save
-      render json: comment, status: :created, location: comment
+    if source.present?
+      comment.source = source
+      if comment.save
+        render json: CommentSerializer.new(comment).as_json, status: :created, location: comment
+      else
+        render_errors comment
+      end
     else
-      render_errors comment
+      render_unprocessable_entity "Source ID must be encoded source path" and return if Utils.numeric?(params[:source_id])
+
+      encoded_source_path = params[:source_id]
+      path = Utils.decode_uri_component_base64(encoded_source_path)
+      page_info = Source.fetch_page_info_for_path(path)
+      title = page_info[:title]
+      title = "#{title} (#{SecureRandom.hex})" if Source.where(name: title).exists?
+      description = page_info[:description]
+
+      source = current_user.sources.build(
+        path: path,
+        name: title,
+        description: description,
+      )
+
+      begin
+        ApplicationRecord.transaction do
+          source.save!
+          comment.source = source
+          comment.save!
+        end
+
+        render json: CommentSerializer.new(comment).as_json, status: :created, location: comment
+      rescue => e
+        render_errors e
+      end
     end
   end
 
@@ -34,7 +65,7 @@ class CommentsController < ApplicationController
     authorize(comment)
 
     if comment.update(comment_params)
-      render json: comment
+      render json: CommentSerializer.new(comment).as_json
     else
       render_errors comment
     end
@@ -56,5 +87,12 @@ class CommentsController < ApplicationController
 
   def comment_params
     params.require(:comment).permit(:parent_id, :body, :section)
+  end
+
+  def find_source(id_ish)
+    return Source.find_by(id: id_ish) if Utils.numeric?(id_ish)
+
+    path = Utils.decode_uri_component_base64(id_ish)
+    Source.find_by(path: path)
   end
 end

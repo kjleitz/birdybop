@@ -49,6 +49,9 @@ class ApplicationController < ActionController::API
     else [errors]
     end
 
+    skip_authorization
+    skip_policy_scope
+
     render(
       status: status,
       json: {
@@ -69,6 +72,10 @@ class ApplicationController < ActionController::API
 
   def render_not_found(error = "Not Found")
     render_errors(error, :not_found)
+  end
+
+  def render_unprocessable_entity(error = "Unprocessable Entity")
+    render_errors(error, :unprocessable_entity)
   end
 
   protected

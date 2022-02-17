@@ -15,9 +15,9 @@ import SessionLink from "@/components/SessionLink.vue";
 <style lang="scss">
 .search-header {
   padding-top: 2rem;
-  padding-bottom: 2rem;
-  padding-left: 2rem;
-  padding-right: 2rem;
+  padding-bottom: 1rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
   border-bottom: 1px solid var(--border);
   background-color: var(--accent-bg);
   display: flex;
@@ -30,6 +30,10 @@ import SessionLink from "@/components/SessionLink.vue";
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
   }
 
   .session-link {
@@ -40,7 +44,6 @@ import SessionLink from "@/components/SessionLink.vue";
 
   h1.logo {
     padding-top: 1rem;
-    padding-right: 1rem;
     padding-bottom: 1rem;
     margin: 0;
     font-size: 2.25rem;
@@ -48,6 +51,7 @@ import SessionLink from "@/components/SessionLink.vue";
     @media (min-width: 640px) {
       font-size: 2.5rem;
       padding-top: 0rem;
+      padding-right: 2rem;
       padding-bottom: 0rem;
       padding-left: 0rem;
       flex-direction: row;

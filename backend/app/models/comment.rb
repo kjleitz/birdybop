@@ -15,4 +15,8 @@ class Comment < ApplicationRecord
 
   validates :section, presence: true
   validates :source, presence: true
+
+  def author_username
+    author.username
+  end
 end

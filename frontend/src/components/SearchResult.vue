@@ -76,7 +76,7 @@ const onClickResult = (event: MouseEvent): void => {
   width: 100%;
   border: 1px solid transparent;
   border-radius: var(--border-radius);
-  padding: 0.25rem 0.5rem;
+  padding: 0.25rem 0;
 
   &:hover {
     border: 1px solid var(--border);

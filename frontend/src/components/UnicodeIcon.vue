@@ -1,5 +1,5 @@
 <template>
-  <span class="unicode-icon">
+  <span :class="['unicode-icon', `unicode-icon-${name}`]">
     <span class="glyph" v-html="code" :style="glyphStyle"></span>
   </span>
 </template>
@@ -23,10 +23,12 @@ type Glyph = string | {
 const GLYPHS: Record<string, Glyph> = {
   // "symbol-name": "<unicode>",
   // "symbol-name": { code: "<unicode>", orientation: "<direction it's already rotated>" },
-  "caret": "&#x2303;",
   "arrowhead": "&#x2B9D;",
-  "triangle-sm": { code: "&#x1F892;", orientation: "right" },
+  "bullet": "&bull;",
+  "caret": "&#x2303;",
+  "interpunct": "&middot;",
   "magnifying-glass": "&#x26B2;",
+  "triangle-sm": { code: "&#x1F892;", orientation: "right" },
 };
 </script>
 

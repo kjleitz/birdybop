@@ -14,6 +14,18 @@ describe("utils", () => {
       uniqInPlace(list, item => item.a);
       assert.sameDeepOrderedMembers(list, [{ a: "hi" }, { a: "hello" }, { a: "goodbye" }, { a: "bye" }]);
     });
+
+    it("should keep earlier elements of the list by default", () => {
+      const list = [{ a: "hi", b: 1 }, { a: "hello", b: 2 }, { a: "hello", b: 3 }, { a: "hi", b: 4 }];
+      uniqInPlace(list, item => item.a);
+      assert.sameDeepOrderedMembers(list, [{ a: "hi", b: 1 }, { a: "hello", b: 2 }]);
+    });
+
+    it("should keep later elements of the list when specified", () => {
+      const list = [{ a: "hi", b: 1 }, { a: "hello", b: 2 }, { a: "hello", b: 3 }, { a: "hi", b: 4 }];
+      uniqInPlace(list, item => item.a, true);
+      assert.sameDeepOrderedMembers(list, [{ a: "hello", b: 3 }, { a: "hi", b: 4 }]);
+    });
   });
 
   describe("type-checking functions", () => {

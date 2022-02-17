@@ -55,7 +55,9 @@ body, body * {
   opacity: 0;
 }
 
-$main-sm-padding-x: 2rem;
+// $main-sm-padding-x: 2rem;
+// $main-sm-padding-x: 0.5rem;
+$main-sm-padding-x: 1rem;
 $main-md-padding-x: 6rem;
 $main-lg-padding-x: 12.5rem;
 $main-max-width: 640px;
@@ -65,10 +67,12 @@ main {
   padding-right: $main-sm-padding-x;
   max-width: calc((2 * $main-sm-padding-x) + $main-max-width);
   width: 100%;
-  padding-top: 2rem;
-  padding-bottom: 2rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
 
   @media (min-width: 640px) {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
     padding-left: $main-md-padding-x;
     max-width: calc($main-sm-padding-x + $main-md-padding-x + $main-max-width);
   }

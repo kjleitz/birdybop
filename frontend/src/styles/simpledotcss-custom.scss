@@ -71,3 +71,18 @@
     }
   }
 }
+
+[role=button],
+button,
+input[type=button],
+input[type=reset],
+input[type=submit] {
+  border: 1px solid transparent;
+  margin: 0;
+  padding: 0.1rem 1rem;
+  line-height: 2;
+}
+
+// pre span {
+//   color: unset;
+// }

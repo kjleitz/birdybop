@@ -5,13 +5,14 @@ class CommentSerializer
 
   attributes(*%i[
     author_id
-    parent_id
-    source_id
+    author_username
     body
-    section
-    karma
     comments_count
     created_at
+    karma
+    parent_id
+    section
+    source_id
     updated_at
   ])
 
@@ -32,5 +33,6 @@ class CommentSerializer
   # # TODO: remove/nerf
   # # TODO: remove/nerf
   # # TODO: remove/nerf
-  # has_many :children, serializer: CommentSerializer
+  # # has_many :children, serializer: CommentSerializer
+  # has_many :children
 end

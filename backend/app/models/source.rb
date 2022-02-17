@@ -66,6 +66,29 @@ class Source < ApplicationRecord
     def uri(path)
       URI::HTTPS.build(host: domain(path), path: sub_path(path))
     end
+
+    def fetch_page_info_for_path(path, bust_cache: false)
+      key = "source:#{Utils.encode_base64(path)}:page_info"
+      Rails.cache.delete(key) if bust_cache
+      Rails.cache.fetch(key, expires_in: 10.minutes) do
+        # TODO: Is this inefficient? Should I be using a single instance
+        #       globally or something?
+        faraday = Faraday.new { |f| f.use BirdybopFaradayMiddleware::FollowRedirects }
+        response = faraday.get(Source.uri(path))
+        document = Nokogiri::HTML(response.body)
+        description = document.css('meta[name="description"]').first&.text || ""
+
+        {
+          title: document.title,
+          description: description,
+        }
+      rescue Faraday::ConnectionFailed => e
+        {
+          title: path.gsub("/", "-").titleize,
+          description: "",
+        }
+      end
+    end
   end
 
   def path=(new_path)
