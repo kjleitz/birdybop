@@ -29,7 +29,7 @@ jobs:
       POSTGRES_DB: birdybop_development
       POSTGRES_USER: birdybop
       POSTGRES_PASSWORD: birdybop
-      POSTGRES_HOST: postgres
+      POSTGRES_HOST: localhost
       REDIS_HOST: redis
 
     services:
