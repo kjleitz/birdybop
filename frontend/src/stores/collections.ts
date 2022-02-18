@@ -1,6 +1,5 @@
 import { uniqInPlace } from "@/lib/utils";
 import type Comment from "@/types/Comment";
-import type JsonApi from "@/types/JsonApi";
 import type SearxResult from "@/types/SearxResult";
 import type Source from "@/types/Source";
 import type User from "@/types/User";

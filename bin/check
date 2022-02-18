@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+
+set -e
+
+BIN_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+
+echo ""
+echo ".===========================================."
+echo "|     Validating the Terraform config...    |"
+echo ""
+
+terraform -chdir="$BIN_DIR/.." validate
+
+echo "|     No errors reported from Terraform.    |"
+echo "'==========================================='"
+echo ""
+echo ".===========================================."
+echo "|        Running front-end linter...        |"
+echo ""
+
+"$BIN_DIR"/frontend pnpm run lint
+
+echo "| No errors reported from front-end linter. |"
+echo "'==========================================='"
+echo ""
+echo ".===========================================."
+echo "|         Running front-end tests...        |"
+echo ""
+
+"$BIN_DIR"/frontend pnpm run test:unit
+
+echo "|  No errors reported from front-end tests. |"
+echo "'==========================================='"
+echo ""
+echo ".===========================================."
+echo "|         Running back-end linter...        |"
+echo ""
+
+"$BIN_DIR"/backend rubocop
+
+echo ""
+echo "|  No errors reported from back-end linter. |"
+echo "'==========================================='"
+echo ""
+echo ".===========================================."
+echo "|         Running back-end tests...         |"
+echo ""
+
+"$BIN_DIR"/backend rails test
+
+echo ""
+echo "|  No errors reported from back-end tests.  |"
+echo "'==========================================='"
+echo ""
+echo ".===========================================."
+echo "|        SUCCESS: No errors reported.       |"
+echo "'==========================================='"

@@ -7,11 +7,13 @@
   --border: #d8dae1;
   --code: #d81b60;
   --disabled: #efefef;
-  --downvote: slateblue;
+  --downvote: #6a5acd;
+  --downvote-bg: #f1effa;
   --preformatted: #444;
   --text-light: #585858;
   --text: #212121;
   --upvote: orangered;
+  --upvote-bg: #fff0eb;
 }
 
 @mixin theme-dark {
@@ -22,10 +24,14 @@
   --code: #f06292;
   --disabled: #111;
   --downvote: slateblue;
+  // --downvote-bg: #251d5e;
+  --downvote-bg: #120E2F;
   --preformatted: #ccc;
   --text-light: #ababab;
   --text: #dcdcdc;
   --upvote: orangered;
+  // --upvote-bg: #661b00;
+  --upvote-bg: #290b00;
 }
 
 @mixin misc-variables {
@@ -71,18 +77,3 @@
     }
   }
 }
-
-[role=button],
-button,
-input[type=button],
-input[type=reset],
-input[type=submit] {
-  border: 1px solid transparent;
-  margin: 0;
-  padding: 0.1rem 1rem;
-  line-height: 2;
-}
-
-// pre span {
-//   color: unset;
-// }

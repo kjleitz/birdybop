@@ -10,7 +10,7 @@
         class="comment"
       />
 
-      <div class="children">
+      <div v-if="!collapsed" class="children">
         <CommentNode
           v-for="child in children"
           :key="child.id"

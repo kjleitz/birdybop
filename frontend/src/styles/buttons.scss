@@ -1,0 +1,41 @@
+[role=button],
+button,
+input[type=button],
+input[type=reset],
+input[type=submit] {
+  border: 1px solid transparent;
+  margin: 0;
+  padding: 0.1rem 1rem;
+  line-height: 2;
+  background-color: var(--accent);
+
+  &.small {
+    line-height: 1.5;
+    font-size: small;
+  }
+
+  &.secondary {
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    color: var(--text);
+    display: inline-block;
+    padding: 0.1rem 1rem;
+    text-decoration: none;
+    background-color: var(--bg);
+
+    &:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+    
+    &:hover, &:focus {
+      filter: none;
+    }
+
+    &.pressed {
+      color: var(--accent);
+      border-color: var(--accent);
+      background-color: var(--accent-bg);
+    }
+  }
+}

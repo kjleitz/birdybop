@@ -38,8 +38,14 @@
           </time>
         </template>
       </small>
+      <button :class="['secondary', 'small', 'upvote', { pressed: upvoted }]" @click.prevent.stop="onUpvoteClicked">
+        <UnicodeIcon name="fat-arrow" direction="up" />
+      </button>
+      <button :class="['secondary', 'small', 'downvote', { pressed: downvoted }]" @click.prevent.stop="onDownvoteClicked">
+        <UnicodeIcon name="fat-arrow" direction="down" />
+      </button>
       <small>
-        <a href="#" @click.prevent="replying = !replying">
+        <a href="#" @click.prevent="replying = !replying" class="reply-btn">
           {{ replying ? "cancel" : "reply"}}
         </a>
       </small>
@@ -93,6 +99,8 @@ const emit = defineEmits({
 });
 
 const replying = ref(false);
+const upvoted = ref(false); // TODO: hook this up
+const downvoted = ref(false); // TODO: hook this up
 
 const id = computed(() => parseInt(props.comment.id, 10));
 const username = computed(() => props.comment.attributes.authorUsername);
@@ -111,6 +119,16 @@ const updatedAgo = computed(() => humanTimeAgo(updatedAtDate.value));
 
 const edited = computed(() => updatedAtDate.value.getTime() - createdAtDate.value.getTime() > 60000);
 const showUpdatedAgo = computed(() => createdAgo.value !== updatedAgo.value);
+
+const onUpvoteClicked = () => {
+  upvoted.value = !upvoted.value;
+  downvoted.value = false;
+};
+
+const onDownvoteClicked = () => {
+  downvoted.value = !downvoted.value;
+  upvoted.value = false;
+};
 </script>
 
 <style lang="scss">
@@ -176,11 +194,49 @@ const showUpdatedAgo = computed(() => createdAgo.value !== updatedAgo.value);
     width: 100%;
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: stretch;
     align-items: center;
 
     .timestamp {
+      display: inline-block;
+      flex-grow: 1;
       color: var(--text-light);
+    }
+
+    > * {
+      + * {
+        margin-left: 0.5rem;
+      }
+    }
+
+    .reply-btn {
+      display: inline-block;
+      text-align: right;
+      min-width: 3rem;
+    }
+
+    button {
+      &.upvote {
+        &:hover, &.pressed {
+          color: var(--upvote);
+          border-color: var(--upvote);
+        }
+
+        &.pressed {
+          background-color: var(--upvote-bg);
+        }
+      }
+
+      &.downvote {
+        &:hover, &.pressed {
+          color: var(--downvote);
+          border-color: var(--downvote);
+        }
+
+        &.pressed {
+          background-color: var(--downvote-bg);
+        }
+      }
     }
   }
 }

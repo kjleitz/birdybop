@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory, type RouteLocationNormalized, type RouteMeta, type RouteRecordNormalized, type RouteRecordRaw } from "vue-router";
+import { createRouter, createWebHistory, type RouteLocationNormalized, type RouteMeta, type RouteRecordNormalized } from "vue-router";
 import Home from "@/views/Home.vue";
 import { useNavigationStore } from "@/stores/navigation";
 import { useSessionStore } from "@/stores/session";

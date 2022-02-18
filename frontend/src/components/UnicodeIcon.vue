@@ -26,8 +26,11 @@ const GLYPHS: Record<string, Glyph> = {
   "arrowhead": "&#x2B9D;",
   "bullet": "&bull;",
   "caret": "&#x2303;",
+  "fat-arrow": "&#129093;",
   "interpunct": "&middot;",
   "magnifying-glass": "&#x26B2;",
+  "triangle-lg": "&#9650;",
+  // "triangle-lg": "&#25B2;",
   "triangle-sm": { code: "&#x1F892;", orientation: "right" },
 };
 </script>
