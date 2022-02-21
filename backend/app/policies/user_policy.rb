@@ -12,10 +12,10 @@ class UserPolicy < ApplicationPolicy
   end
 
   def update?
-    logged_in? && (user.admin? || user.id === record.id)
+    logged_in? && (user.admin? || user.id == record.id)
   end
 
   def destroy?
-    logged_in? && (user.admin? || user.id === record.id)
+    logged_in? && (user.admin? || user.id == record.id)
   end
 end

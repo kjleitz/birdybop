@@ -1,0 +1,15 @@
+// Hover state persists after tap on mobile devices. Very annoying. See the
+// following discussion: https://stackoverflow.com/a/28058919/7469691
+@mixin with-true-hover {
+  @media (hover: hover) {
+    @content;
+  }
+}
+
+@mixin on-true-hover {
+  @include with-true-hover {
+    &:not([disabled]):hover {
+      @content;
+    }
+  }
+}

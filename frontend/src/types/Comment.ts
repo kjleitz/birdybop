@@ -1,3 +1,4 @@
+import type { CommentVoteCollectionResponse } from "@/types/CommentVote";
 import type JsonApi from "@/types/JsonApi";
 
 export type CommentSection = "discussion" | "q_and_a" | "warnings" | "tips";
@@ -7,12 +8,16 @@ export interface CommentAttributes {
   authorUsername: number;
   body: string;
   commentsCount: string;
+  downvoteCount: number;
+  upvoteCount: number;
+  laplaceRank: number;
   karma: number;
   parentId: number;
   section: CommentSection;
   sourceId: number;
   createdAt: string;
   updatedAt: string;
+  editedAt: string | null;
 }
 
 export type CommentRelationships = {
@@ -51,3 +56,14 @@ export type CommentCollectionResponse<
   undefined, // TODO: This should have pagination links
   M
 >;
+
+// export type CommentCollectionResponseWithCommentVotes = CommentCollectionResponse<{
+//   commentVotes: {
+//     commentId: number;
+//     upvote: boolean;
+//   }[];
+// }>;
+
+export type CommentCollectionResponseWithCommentVotes = CommentCollectionResponse<{
+  currentUserCommentVotes: CommentVoteCollectionResponse;
+}>;

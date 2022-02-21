@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_01_19_203355) do
+ActiveRecord::Schema.define(version: 2022_02_21_222236) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -65,7 +65,13 @@ ActiveRecord::Schema.define(version: 2022_01_19_203355) do
     t.datetime "updated_at", precision: 6, null: false
     t.integer "karma", default: 0
     t.integer "comments_count"
+    t.integer "upvote_count", default: 0
+    t.integer "downvote_count", default: 0
+    t.float "laplace_rank", default: 0.5
+    t.datetime "edited_at"
     t.index ["author_id"], name: "index_comments_on_author_id"
+    t.index ["laplace_rank", "created_at"], name: "index_comments_on_laplace_rank_and_created_at"
+    t.index ["laplace_rank"], name: "index_comments_on_laplace_rank"
     t.index ["parent_id"], name: "index_comments_on_parent_id"
     t.index ["source_id"], name: "index_comments_on_source_id"
   end

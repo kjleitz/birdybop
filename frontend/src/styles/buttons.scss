@@ -1,3 +1,5 @@
+@import "@/styles/mixins.scss";
+
 [role=button],
 button,
 input[type=button],
@@ -23,12 +25,13 @@ input[type=submit] {
     text-decoration: none;
     background-color: var(--bg);
 
-    &:hover {
+    @include on-true-hover {
       color: var(--accent);
       border-color: var(--accent);
+      filter: none;
     }
     
-    &:hover, &:focus {
+    &:focus {
       filter: none;
     }
 

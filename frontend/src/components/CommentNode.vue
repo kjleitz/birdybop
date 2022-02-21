@@ -54,6 +54,8 @@ const children = computed(() => commentsStore.childrenOf(props.comment));
 </script>
 
 <style lang="scss">
+@import "@/styles/mixins.scss";
+
 .comment-node {
   border-top: 1px solid var(--border);
   border-top-left-radius: var(--border-radius);
@@ -84,7 +86,7 @@ const children = computed(() => commentsStore.childrenOf(props.comment));
     // margin-right: 0.5rem;
     opacity: 0.5;
 
-    &:hover {
+    @include on-true-hover {
       opacity: 1;
       cursor: pointer;
     }
@@ -99,6 +101,10 @@ const children = computed(() => commentsStore.childrenOf(props.comment));
   .comment-area {
     // flex-grow: 1;
     width: 100%;
+
+    .children {
+      margin-top: 0.5rem;
+    }
   }
   // .children {
   //   flex-grow: 1;

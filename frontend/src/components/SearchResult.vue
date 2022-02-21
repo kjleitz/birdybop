@@ -65,6 +65,8 @@ const onClickResult = (event: MouseEvent): void => {
 </script>
 
 <style lang="scss">
+@import "@/styles/mixins.scss";
+
 .search-result {
   position: relative;
   display: flex;
@@ -78,7 +80,7 @@ const onClickResult = (event: MouseEvent): void => {
   border-radius: var(--border-radius);
   padding: 0.25rem 0;
 
-  &:hover {
+  @include on-true-hover {
     border: 1px solid var(--border);
     cursor: pointer;
   }

@@ -25,10 +25,12 @@ class CommentVote < ApplicationRecord
 
   def create_karma!
     if upvote?
-      Comment.increment_counter(:karma, comment_id)
+      Comment.where(id: comment_id).update_counters(karma: 1, upvote_count: 1)
     else
-      Comment.decrement_counter(:karma, comment_id)
+      Comment.where(id: comment_id).update_counters(karma: -1, downvote_count: 1)
     end
+
+    Comment.update_laplace_rank!(comment_id)
   end
 
   def update_karma!
@@ -36,17 +38,21 @@ class CommentVote < ApplicationRecord
     return if old_state == new_state
 
     if new_state
-      2.times { Comment.increment_counter(:karma, comment_id) }
+      Comment.where(id: comment_id).update_counters(karma: 2, downvote_count: -1, upvote_count: 1)
     else
-      2.times { Comment.decrement_counter(:karma, comment_id) }
+      Comment.where(id: comment_id).update_counters(karma: -2, downvote_count: 1, upvote_count: -1)
     end
+
+    Comment.update_laplace_rank!(comment_id)
   end
 
   def destroy_karma!
     if upvote?
-      Comment.decrement_counter(:karma, comment_id)
+      Comment.where(id: comment_id).update_counters(karma: -1, upvote_count: -1)
     else
-      Comment.increment_counter(:karma, comment_id)
+      Comment.where(id: comment_id).update_counters(karma: 1, downvote_count: -1)
     end
+
+    Comment.update_laplace_rank!(comment_id)
   end
 end

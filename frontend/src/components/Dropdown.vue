@@ -114,6 +114,8 @@ const handleChildBlur = (event: FocusEvent): void => {
 </script>
 
 <style lang="scss">
+@import "@/styles/mixins.scss";
+
 .dropdown {
   display: inline-block;
   position: relative;
@@ -137,6 +139,7 @@ const handleChildBlur = (event: FocusEvent): void => {
     padding: 0;
     border-bottom-left-radius: var(--border-radius);
     border-bottom-right-radius: var(--border-radius);
+    background-color: var(--bg);
 
     &.right {
       right: 0;
@@ -157,13 +160,21 @@ const handleChildBlur = (event: FocusEvent): void => {
       background-color: inherit;
       border-bottom: 1px solid var(--border);
       white-space: nowrap;
+      text-decoration: none;
+      color: var(--accent);
 
       &:last-of-type {
         border-bottom: 0;
       }
 
-      &:focus, &:hover {
+      &:focus {
         background-color: var(--accent-bg);
+        text-decoration: underline;
+      }
+
+      @include on-true-hover {
+        background-color: var(--accent-bg);
+        text-decoration: underline;
       }
     }
   }

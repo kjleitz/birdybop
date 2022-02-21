@@ -33,8 +33,8 @@
         </time>
         <template v-if="edited">
           <UnicodeIcon name="bullet" />
-          <time :datetime="updatedAtJson" :title="updatedAtHuman">
-            (edited{{ showUpdatedAgo ? ` ${updatedAgo}` : "" }})
+          <time :datetime="editedAtJson" :title="editedAtHuman">
+            (edited{{ showEditedAgo ? ` ${editedAgo}` : "" }})
           </time>
         </template>
       </small>
@@ -70,6 +70,9 @@ import CommentEditor from "./CommentEditor.vue";
 import markdownToHtml from "@/lib/markdown-utils";
 import { humanTimeAgo } from "@/lib/date-utils";
 import { isA } from "@/lib/validators";
+import { useCommentsStore } from "@/stores/comments";
+
+const commentsStore = useCommentsStore();
 
 const props = defineProps({
   comment: {
@@ -99,39 +102,65 @@ const emit = defineEmits({
 });
 
 const replying = ref(false);
-const upvoted = ref(false); // TODO: hook this up
-const downvoted = ref(false); // TODO: hook this up
 
 const id = computed(() => parseInt(props.comment.id, 10));
 const username = computed(() => props.comment.attributes.authorUsername);
 const bodyHtml = computed(() => markdownToHtml(props.comment.attributes.body));
+const commentVoteState = computed(() => commentsStore.commentVoteState(id.value));
+const upvoted = computed(() => commentVoteState.value === true); // `commentVoteState.value` can be `null`
+const downvoted = computed(() => commentVoteState.value === false); // `commentVoteState.value` can be `null`
 
 const createdAtDate = computed(() => new Date(props.comment.attributes.createdAt));
 const createdAtJson = computed(() => createdAtDate.value.toJSON());
 const createdAtHuman = computed(() => createdAtDate.value.toLocaleString());
 
-const updatedAtDate = computed(() => new Date(props.comment.attributes.updatedAt));
-const updatedAtJson = computed(() => updatedAtDate.value.toJSON());
-const updatedAtHuman = computed(() => updatedAtDate.value.toLocaleString());
+const editedAtDate = computed(() => {
+  const { editedAt } = props.comment.attributes;
+  return editedAt ? new Date(editedAt) : null;
+});
+const editedAtJson = computed(() => editedAtDate.value?.toJSON() || "");
+const editedAtHuman = computed(() => editedAtDate.value?.toLocaleString() || "");
 
 const createdAgo = computed(() => humanTimeAgo(createdAtDate.value));
-const updatedAgo = computed(() => humanTimeAgo(updatedAtDate.value));
+const editedAgo = computed(() => editedAtDate.value ? humanTimeAgo(editedAtDate.value) : "");
 
-const edited = computed(() => updatedAtDate.value.getTime() - createdAtDate.value.getTime() > 60000);
-const showUpdatedAgo = computed(() => createdAgo.value !== updatedAgo.value);
+const edited = computed(() => !!editedAtDate.value && (editedAtDate.value.getTime() - createdAtDate.value.getTime()) > 60000);
+const showEditedAgo = computed(() => edited.value && createdAgo.value !== editedAgo.value);
 
 const onUpvoteClicked = () => {
-  upvoted.value = !upvoted.value;
-  downvoted.value = false;
+  if (upvoted.value) {
+    // User is removing their existing upvote
+    commentsStore.deleteCommentVote(props.comment.id);
+  } else {
+    // User is upvoting the comment
+    // commentsStore.upvoteComment(props.comment.id).then((commentVote) => {
+    //   upvoted.value = commentVote.attributes.upvote;
+    // });
+    commentsStore.upvoteComment(props.comment.id);
+  }
+
+  // downvoted.value = false;
 };
 
 const onDownvoteClicked = () => {
-  downvoted.value = !downvoted.value;
-  upvoted.value = false;
+  if (downvoted.value) {
+    // User is removing their existing upvote
+    commentsStore.deleteCommentVote(props.comment.id);
+  } else {
+    // User is upvoting the comment
+    // commentsStore.downvoteComment(props.comment.id).then((commentVote) => {
+    //   downvoted.value = commentVote.attributes.upvote;
+    // });
+    commentsStore.downvoteComment(props.comment.id);
+  }
+
+  // upvoted.value = false;
 };
 </script>
 
 <style lang="scss">
+@import "@/styles/mixins.scss";
+
 .comment {
   margin-top: 0.25rem;
   margin-bottom: 0.25rem;
@@ -161,6 +190,7 @@ const onDownvoteClicked = () => {
     .info {
       flex-wrap: nowrap;
       white-space: nowrap;
+      color: var(--text-light);
     }
 
     .toggle-collapse {
@@ -216,8 +246,15 @@ const onDownvoteClicked = () => {
     }
 
     button {
+      color: var(--text-light);
+
       &.upvote {
-        &:hover, &.pressed {
+        @include on-true-hover {
+          color: var(--upvote);
+          border-color: var(--upvote);
+        }
+
+        &.pressed {
           color: var(--upvote);
           border-color: var(--upvote);
         }
@@ -228,7 +265,12 @@ const onDownvoteClicked = () => {
       }
 
       &.downvote {
-        &:hover, &.pressed {
+        @include on-true-hover {
+          color: var(--downvote);
+          border-color: var(--downvote);
+        }
+
+        &.pressed {
           color: var(--downvote);
           border-color: var(--downvote);
         }

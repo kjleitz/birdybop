@@ -54,6 +54,8 @@ const children = computed(() => commentsStore.childrenOf(props.comment));
 </script>
 
 <style lang="scss">
+@import "@/styles/mixins.scss";
+
 .comment-node {
   .comment {
     margin-bottom: 0.5rem;
@@ -88,7 +90,7 @@ const children = computed(() => commentsStore.childrenOf(props.comment));
       // margin-right: 0.5rem;
       opacity: 0.5;
 
-      &:hover {
+      @include on-true-hover {
         opacity: 1;
         cursor: pointer;
       }

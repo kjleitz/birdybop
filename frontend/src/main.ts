@@ -10,6 +10,8 @@ import router from "@/router";
 import { usePreferencesStore } from "@/stores/preferences";
 // import "@/registerServiceWorker";
 
+console.log("Birdybop is open source! Contributors are welcome. Check out the repo on GitHub: https://github.com/kjleitz/birdybop"); // eslint-disable-line
+
 const app = createApp(App);
 
 app.use(createPinia());

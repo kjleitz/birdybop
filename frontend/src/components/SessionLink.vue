@@ -3,7 +3,7 @@
     <!-- <Checkbox v-model="darkMode">dark</Checkbox> -->
     <Checkbox v-model:checked="darkMode">dark</Checkbox>
     <router-link v-if="!isLoggedIn" :to="{ name: 'SignIn' }">Sign in</router-link>
-    <Dropdown v-else right>
+    <Dropdown v-else right class="dropdown">
       <template #label>{{ username }}</template>
       <template #items>
         <a href="#">foobar1</a>
@@ -54,6 +54,12 @@ const logOut = () => deleteSession().catch((error) => toastError(error.message))
 
   * + * {
     margin-left: 1rem;
+  }
+
+  .dropdown {
+    .menu {
+      background-color: var(--accent-bg);
+    }
   }
 }
 </style>

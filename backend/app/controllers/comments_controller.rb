@@ -4,8 +4,23 @@ class CommentsController < ApplicationController
   # GET /sources/1/comments
   def index
     source = find_source(params[:source_id])
-    comments = policy_scope(source.present? ? source.comments : Comment.none)
-    render json: CommentSerializer.new(comments, is_collection: true).as_json
+    comments = policy_scope(source.present? ? source.comments : Comment.none).sorted_by_best
+
+    comment_votes = if logged_in?
+      CommentVote.where(comment: comments, user: current_user)
+    else
+      []
+    end
+
+    comment_votes_data = CommentVoteSerializer.new(comment_votes, is_collection: true).as_json
+
+    comments_data = CommentSerializer.new(
+      comments,
+      is_collection: true,
+      meta: { currentUserCommentVotes: comment_votes_data },
+    ).as_json
+
+    render json: comments_data
   end
 
   # GET /comments/1
@@ -25,6 +40,8 @@ class CommentsController < ApplicationController
     if source.present?
       comment.source = source
       if comment.save
+        # comment.create_initial_upvote!
+        # comment.reload
         render json: CommentSerializer.new(comment).as_json, status: :created, location: comment
       else
         render_errors comment
@@ -52,6 +69,8 @@ class CommentsController < ApplicationController
           comment.save!
         end
 
+        # comment.create_initial_upvote!
+        # comment.reload
         render json: CommentSerializer.new(comment).as_json, status: :created, location: comment
       rescue => e
         render_errors e
@@ -64,7 +83,11 @@ class CommentsController < ApplicationController
     comment = Comment.find(params[:id])
     authorize(comment)
 
-    if comment.update(comment_params)
+    old_body = comment.body
+    comment.assign_attributes(comment_params)
+    comment.edited_at = Time.zone.now if comment.body != old_body
+
+    if comment.save
       render json: CommentSerializer.new(comment).as_json
     else
       render_errors comment
