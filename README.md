@@ -183,3 +183,9 @@ I mean, go ham.
 ## TODO
 
 - Consider keeping the crawler and Solr database for sites that aren't present in Searx (user-submitted). See [the Searx docs for integrating with Solr](https://searx.github.io/searx/blog/search-indexer-engines.html#solr) if it seems like a decent idea.
+- https://www.grahamhelton.com/blog/searx/ (set up searx on an EC2 instance) (need: via terraform)
+- https://www.alexhyett.com/github-actions-deploy-to-s3 (deploy front end)
+- (set up Rails on an EC2 instance) (need: via terraform)
+  - this is also pretty useful: https://dev.to/mariehposa/how-to-deploy-an-application-to-aws-ec2-instance-using-terraform-and-ansible-3e78
+  - see this [dead] repo for [old, but] thorough examples: https://github.com/segmentio/stack
+- https://www.alexhyett.com/save-money-on-aws

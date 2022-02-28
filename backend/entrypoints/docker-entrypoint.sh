@@ -22,7 +22,7 @@ bundle check || bundle install
 # because stopping the running container is taking forever:
 #
 #   [...] Another possible cause, is if you run your process from an entrypoint
-#   script without using exec. With exec, your process “takes the place” and
+#   script without using exec. With exec, your process "takes the place" and
 #   gets all signals, otherwise they are received and kept by the entrypoint
 #   script.
 #
