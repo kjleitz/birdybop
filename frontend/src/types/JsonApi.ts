@@ -26,9 +26,9 @@ namespace JsonApi {
   //   // meta?: Meta; // this actually exists outside of the document here
   // }
 
-  // - a string containing the link’s URL, or
-  // - an object (“link object”) which can contain the following members:
-  //     href: a string containing the link’s URL.
+  // - a string containing the link's URL, or
+  // - an object ("link object") which can contain the following members:
+  //     href: a string containing the link's URL.
   //     meta: a meta object containing non-standard meta-information about the link.
   export type Link = string | {
     href: string;
@@ -50,7 +50,7 @@ namespace JsonApi {
     meta?: Meta;
   }
 
-  // jsonapi: an object describing the server’s implementation
+  // jsonapi: an object describing the server's implementation
   // links: a links object related to the primary data.
   // meta: a meta object that contains non-standard meta-information.
   interface CommonResponseProperties<
@@ -66,7 +66,7 @@ namespace JsonApi {
   export type Attributes = Record<string, any>;
 
   // links: a links object containing at least one of the following:
-  //   self: a link for the relationship itself (a “relationship link”). This link allows the client to directly manipulate the relationship. For example, removing an author through an article’s relationship URL would disconnect the person from the article without deleting the people resource itself. When fetched successfully, this link returns the linkage for the related resources as its primary data. (See Fetching Relationships.)
+  //   self: a link for the relationship itself (a "relationship link"). This link allows the client to directly manipulate the relationship. For example, removing an author through an article's relationship URL would disconnect the person from the article without deleting the people resource itself. When fetched successfully, this link returns the linkage for the related resources as its primary data. (See Fetching Relationships.)
   //   related: a related resource link
   // meta: a meta object that contains non-standard meta-information about the relationship.
   interface CommonRelationshipDetailsProperties {
@@ -85,7 +85,7 @@ namespace JsonApi {
   }
 
   // links: a links object containing at least one of the following:
-  //   self: a link for the relationship itself (a “relationship link”). This link allows the client to directly manipulate the relationship. For example, removing an author through an article’s relationship URL would disconnect the person from the article without deleting the people resource itself. When fetched successfully, this link returns the linkage for the related resources as its primary data. (See Fetching Relationships.)
+  //   self: a link for the relationship itself (a "relationship link"). This link allows the client to directly manipulate the relationship. For example, removing an author through an article's relationship URL would disconnect the person from the article without deleting the people resource itself. When fetched successfully, this link returns the linkage for the related resources as its primary data. (See Fetching Relationships.)
   //   related: a related resource link
   // data: resource linkage
   // meta: a meta object that contains non-standard meta-information about the relationship.
@@ -93,13 +93,13 @@ namespace JsonApi {
 
   // [index: string]:
   //   links: a links object containing at least one of the following:
-  //     self: a link for the relationship itself (a “relationship link”). This link allows the client to directly manipulate the relationship. For example, removing an author through an article’s relationship URL would disconnect the person from the article without deleting the people resource itself. When fetched successfully, this link returns the linkage for the related resources as its primary data. (See Fetching Relationships.)
+  //     self: a link for the relationship itself (a "relationship link"). This link allows the client to directly manipulate the relationship. For example, removing an author through an article's relationship URL would disconnect the person from the article without deleting the people resource itself. When fetched successfully, this link returns the linkage for the related resources as its primary data. (See Fetching Relationships.)
   //     related: a related resource link
   //   data: resource linkage
   //   meta: a meta object that contains non-standard meta-information about the relationship.
   export type Relationships<T extends Record<string, RelationshipDetails> = Record<string, RelationshipDetails>> = T;
 
-  // // attributes: an attributes object representing some of the resource’s data.
+  // // attributes: an attributes object representing some of the resource's data.
   // // relationships: a relationships object describing relationships between the resource and other JSON:API resources.
   // // links: a links object containing links related to the resource.
   // // meta: a meta object containing non-standard meta-information about a resource that can not be represented as an attribute or relationship.
@@ -112,7 +112,7 @@ namespace JsonApi {
   //   meta?: Meta;
   // }
 
-  // attributes: an attributes object representing some of the resource’s data.
+  // attributes: an attributes object representing some of the resource's data.
   // relationships: a relationships object describing relationships between the resource and other JSON:API resources.
   // links: a links object containing links related to the resource.
   // meta: a meta object containing non-standard meta-information about a resource that can not be represented as an attribute or relationship.
@@ -138,15 +138,15 @@ namespace JsonApi {
     meta?: Meta;
   }
 
-  // // data: the document’s “primary data”
-  // // included: an array of resource objects that are related to the primary data and/or each other (“included resources”).
+  // // data: the document's "primary data"
+  // // included: an array of resource objects that are related to the primary data and/or each other ("included resources").
   // export interface ItemResponse extends CommonResponseProperties {
   //   data: ResourceData | ResourceIdentifier | null;
   //   included?: ResourceData[];
   // }
 
-  // data: the document’s “primary data”
-  // included: an array of resource objects that are related to the primary data and/or each other (“included resources”).
+  // data: the document's "primary data"
+  // included: an array of resource objects that are related to the primary data and/or each other ("included resources").
   export interface ItemResponse<
     D extends ResourceData | ResourceIdentifier | null = ResourceData | ResourceIdentifier | null,
     I extends ResourceData[] | undefined = ResourceData[] | undefined,
@@ -157,15 +157,15 @@ namespace JsonApi {
     included: I;
   }
 
-  // // data: the document’s “primary data”
-  // // included: an array of resource objects that are related to the primary data and/or each other (“included resources”).
+  // // data: the document's "primary data"
+  // // included: an array of resource objects that are related to the primary data and/or each other ("included resources").
   // export interface CollectionResponse extends CommonResponseProperties {
   //   data: ResourceData[] | ResourceIdentifier[];
   //   included?: ResourceData[];
   // }
 
-  // data: the document’s “primary data”
-  // included: an array of resource objects that are related to the primary data and/or each other (“included resources”).
+  // data: the document's "primary data"
+  // included: an array of resource objects that are related to the primary data and/or each other ("included resources").
   export interface CollectionResponse<
     D extends ResourceData[] | ResourceIdentifier[] = ResourceData[] | ResourceIdentifier[],
     I extends ResourceData[] | undefined = ResourceData[] | undefined,
@@ -201,7 +201,7 @@ namespace JsonApi {
   // status: the HTTP status code applicable to this problem, expressed as a string value.
   // code: an application-specific error code, expressed as a string value.
   // title: a short, human-readable summary of the problem that SHOULD NOT change from occurrence to occurrence of the problem, except for purposes of localization.
-  // detail: a human-readable explanation specific to this occurrence of the problem. Like title, this field’s value can be localized.
+  // detail: a human-readable explanation specific to this occurrence of the problem. Like title, this field's value can be localized.
   // source: an object containing references to the source of the error, optionally including any of the following members:
   //   pointer: a JSON Pointer [RFC6901] to the associated entity in the request document [e.g. "/data" for a primary data object, or "/data/attributes/title" for a specific attribute].
   //   parameter: a string indicating which URI query parameter caused the error.
@@ -225,12 +225,12 @@ namespace JsonApi {
     errors: ErrorDetails[];
   }
 
-  // data: the document’s “primary data”
+  // data: the document's "primary data"
   // errors: an array of error objects
   // meta: a meta object that contains non-standard meta-information.
-  // jsonapi: an object describing the server’s implementation
+  // jsonapi: an object describing the server's implementation
   // links: a links object related to the primary data.
-  // included: an array of resource objects that are related to the primary data and/or each other (“included resources”).
+  // included: an array of resource objects that are related to the primary data and/or each other ("included resources").
   export type Response<
     D extends ResourceData | ResourceIdentifier | null = ResourceData | ResourceIdentifier | null,
     I extends ResourceData[] | undefined = ResourceData[] | undefined,

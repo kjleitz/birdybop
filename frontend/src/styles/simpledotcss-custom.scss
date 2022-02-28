@@ -1,4 +1,5 @@
 @import "../../node_modules/simpledotcss/simple.min.css";
+@import "@/styles/mixins.scss";
 
 @mixin theme-light {
   --accent-bg: #f5f7ff;
@@ -76,4 +77,24 @@
       @include theme-dark;
     }
   }
+}
+
+nav a {
+  cursor: pointer;
+
+  //// Disabled anchor tags in pure CSS is just a bad idea and a PitA. You can
+  //// make them _look_ disabled, but they're not really disabled unless you add
+  //// `pointer-events: none`, and in that case you can't have a handy semantic
+  //// cursor like `cursor: not-allowed` on hover. Plus, `pointer-events: none`
+  //// doesn't really work correctly with, e.g., screen readers, so you'd need
+  //// to add `aria-disabled="true"` and that's not something you can do in pure
+  //// CSS. See the following article for a more thorough breakdown:
+  //// https://css-tricks.com/how-to-disable-links/
+  //
+  // &[disabled] {
+  //   opacity: 0.5;
+  //   cursor: not-allowed;
+  //   color: var(--text);
+  //   border-color: var(--border);
+  // }
 }

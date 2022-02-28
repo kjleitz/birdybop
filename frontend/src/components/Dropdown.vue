@@ -165,6 +165,8 @@ const handleChildBlur = (event: FocusEvent): void => {
 
       &:last-of-type {
         border-bottom: 0;
+        border-bottom-left-radius: inherit;
+        border-bottom-right-radius: inherit;
       }
 
       &:focus {

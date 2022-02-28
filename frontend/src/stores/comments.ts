@@ -5,7 +5,7 @@ import { useCollectionsStore } from "@/stores/collections";
 import { defineStore } from "pinia";
 import { useSourcesStore } from "@/stores/sources";
 import type CommentVote from "@/types/CommentVote";
-import { createInitialUserUpvote } from "@/lib/comment-utils";
+import { createInitialUserUpvote, identifyingKeyForCommentVote } from "@/lib/comment-utils";
 import { useUserStore } from "@/stores/user";
 
 export const useCommentsStore = defineStore("comments", {
@@ -57,6 +57,11 @@ export const useCommentsStore = defineStore("comments", {
       this.creatingComment = creatingComment;
     },
 
+    addCommentVotesToCollection(...commentVotes: CommentVote[]): void {
+      const collectionsStore = useCollectionsStore();
+      collectionsStore.addToCollection(commentVotes, identifyingKeyForCommentVote);
+    },
+
     fetchComments(sourcePath: string): Promise<void> {
       this.setLoadingComments(true);
       const collectionsStore = useCollectionsStore();
@@ -65,7 +70,7 @@ export const useCommentsStore = defineStore("comments", {
       return fetchComments(encodedSourcePath).then((response) => {
         collectionsStore.addToCollection(response.data);
         const commentVotes = response.meta.currentUserCommentVotes;
-        if (commentVotes) collectionsStore.addToCollection(commentVotes.data);
+        if (commentVotes) this.addCommentVotesToCollection(...commentVotes.data);
       }).finally(() => {
         this.setLoadingComments(false);
       });
@@ -100,7 +105,7 @@ export const useCommentsStore = defineStore("comments", {
         const userId = parseInt(userStore.user.id, 10);
         const commentId = parseInt(comment.id, 10);
         const upvote = createInitialUserUpvote(userId, commentId);
-        collectionsStore.addToCollection(upvote);
+        this.addCommentVotesToCollection(upvote);
 
         // Fetch the source, because it may have just been created, and/or it
         // may be updated with new info.
@@ -145,7 +150,7 @@ export const useCommentsStore = defineStore("comments", {
         collectionsStore.removeFromCollectionByKey(
           "commentVote",
           commentId,
-          commentVote => `${commentVote.attributes.commentId}`,
+          identifyingKeyForCommentVote,
         );
 
         this.updateKarma(commentId, oldVote, null);
@@ -153,11 +158,10 @@ export const useCommentsStore = defineStore("comments", {
     },
 
     voteOnComment(commentId: number | string, upvote: boolean): Promise<CommentVote> {
-      const collectionsStore = useCollectionsStore();
       const oldVote = this.commentVoteState(commentId);
 
       return createCommentVote(commentId, { upvote }).then((commentVote) => {
-        collectionsStore.addToCollection(commentVote);
+        this.addCommentVotesToCollection(commentVote);
         this.updateKarma(commentId, oldVote, commentVote.attributes.upvote);
         return commentVote;
       });

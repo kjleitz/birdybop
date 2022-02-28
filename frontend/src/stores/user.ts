@@ -1,3 +1,4 @@
+import { keepSessionAlive } from "@/api/sessionService";
 import { createUser, type UserCreateParams } from "@/api/userService";
 import { createBlankUser } from "@/lib/user-utils";
 import { useCollectionsStore } from "@/stores/collections";
@@ -29,6 +30,7 @@ export const useUserStore = defineStore("user", {
       return createUser(params).then((user) => {
         this.setUser(user);
         collectionsStore.addToCollection(user);
+        keepSessionAlive();
       }).finally(() => {
         this.setCreatingUser(false);
       });

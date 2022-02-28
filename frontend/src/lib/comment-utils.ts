@@ -1,8 +1,9 @@
+import { sequentialId } from "@/lib/utils";
 import type CommentVote from "@/types/CommentVote";
 
 export function createInitialUserUpvote(userId: number, commentId: number): CommentVote {
   return {
-    id: "0",
+    id: sequentialId("initialUserUpvote"),
     type: "commentVote",
     attributes: {
       userId,
@@ -15,4 +16,9 @@ export function createInitialUserUpvote(userId: number, commentId: number): Comm
     links: undefined,
     meta: undefined,
   };
+}
+
+export function identifyingKeyForCommentVote(commentVote: CommentVote): string {
+  const { userId, commentId } = commentVote.attributes;
+  return `${userId}${commentId}`;
 }

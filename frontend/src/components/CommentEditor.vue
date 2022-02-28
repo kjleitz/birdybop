@@ -2,6 +2,8 @@
   <div class="comment-editor">
     <form action="#" @submit.prevent="onSubmit">
       <textarea
+        ref="$bodyInput"
+        v-if="!previewing"
         v-model.trim="form.body"
         :autofocus="autofocus"
         :disabled="creatingComment"
@@ -11,28 +13,39 @@
         required
         rows="3"
       ></textarea>
+      <CommentBody
+        v-else
+        :body="form.body"
+        class="preview"
+      />
 
-      <nav class="actions">
-        <button type="submit" :disabled="!form.body" @click.prevent="onSubmit">
+      <div class="actions">
+        <button :disabled="!form.body" type="submit" @click.prevent="onSubmit">
           Submit
         </button>
-        <a v-if="cancelable" href="#" @click.prevent="onCancel">
+        <button :disabled="!form.body" class="secondary" @click.prevent="previewing = !previewing">
+          {{ previewing ? "Edit" : "Preview" }}
+        </button>
+        <button v-if="cancelable" href="#" class="secondary" @click.prevent="onCancel">
           Cancel
-        </a>
-      </nav>
+        </button>
+      </div>
     </form>
   </div>
 </template>
 
 <script setup lang="ts">
 import type { CommentCreateParams } from '@/api/commentService';
+import CommentBody from '@/components/CommentBody.vue';
 import { isA } from '@/lib/validators';
 import { useCommentsStore } from '@/stores/comments';
 import type { CommentSection } from '@/types/Comment';
 import { storeToRefs } from 'pinia';
-import { computed, ref, type PropType } from 'vue';
+import { computed, onMounted, ref, type PropType } from 'vue';
 
 const commentsStore = useCommentsStore();
+
+const $bodyInput = ref<HTMLTextAreaElement>();
 
 const props = defineProps({
   sourcePath: {
@@ -61,6 +74,8 @@ const emit = defineEmits({
   "cancel": null,
 });
 
+const previewing = ref(false);
+
 const form = ref({
   body: "",
   section: "discussion" as CommentSection,
@@ -73,6 +88,10 @@ const commentCreateParams = computed((): CommentCreateParams => ({
   parentId: props.parentId,
   section: form.value.section,
 }));
+
+onMounted(() => {
+  if (props.autofocus && $bodyInput.value) $bodyInput.value.focus();
+});
 
 const onSubmit = (): void => {
   commentsStore.createComment(props.sourcePath, commentCreateParams.value).then(() => {
@@ -116,6 +135,10 @@ const onCancel = (): void => {
         }
       }
     }
+  }
+
+  .preview {
+    margin-left: 0.5rem;
   }
 }
 </style>

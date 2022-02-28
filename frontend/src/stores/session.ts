@@ -1,4 +1,4 @@
-import { createSession, deleteSession, refreshSession, type SessionCreateParams } from "@/api/sessionService";
+import { createSession, deleteSession, keepSessionAlive, refreshSession, letSessionDie, type SessionCreateParams } from "@/api/sessionService";
 import { createBlankUser } from "@/lib/user-utils";
 import { useCollectionsStore } from "@/stores/collections";
 import { useUserStore } from "@/stores/user";
@@ -35,6 +35,7 @@ export const useSessionStore = defineStore("session", {
       return createSession(params).then((user) => {
         userStore.setUser(user);
         collectionsStore.addToCollection(user);
+        keepSessionAlive();
       }).finally(() => {
         this.setCreatingSession(false);
       });
@@ -47,6 +48,7 @@ export const useSessionStore = defineStore("session", {
       return refreshSession().then((user) => {
         userStore.setUser(user);
         collectionsStore.addToCollection(user);
+        keepSessionAlive();
       }).finally(() => {
         this.setRefreshingSession(false);
       });
@@ -55,8 +57,10 @@ export const useSessionStore = defineStore("session", {
     deleteSession(): Promise<void> {
       this.setDeletingSession(true);
       const userStore = useUserStore();
+      letSessionDie();
       return deleteSession().then(() => {
-        userStore.setUser(createBlankUser());
+        const blankUser = createBlankUser();
+        userStore.setUser(blankUser);
       }).finally(() => {
         this.setDeletingSession(false);
       });

@@ -100,3 +100,9 @@ export const isObject = classChecker(Object);
 export const isRegExp = classChecker(RegExp);
 export const isString = classChecker(String);
 export const isSymbol = classChecker(Symbol);
+
+let prevId = 0;
+export function sequentialId(prefix = "tmp"): string {
+  prevId += 1;
+  return `${prefix}${prevId}`;
+}

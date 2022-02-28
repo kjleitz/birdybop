@@ -22,9 +22,7 @@
       </small>
     </header>
 
-    <div class="body">
-      <div class="rendered-markdown" v-html="bodyHtml"></div>
-    </div>
+    <CommentBody :body="comment.attributes.body" class="body" />
 
     <footer>
       <small class="timestamp">
@@ -45,6 +43,7 @@
         <UnicodeIcon name="fat-arrow" direction="down" />
       </button>
       <small>
+        <!-- <a href="#" @click.prevent="onToggleReply" class="reply-btn"> -->
         <a href="#" @click.prevent="replying = !replying" class="reply-btn">
           {{ replying ? "cancel" : "reply"}}
         </a>
@@ -66,8 +65,8 @@
 import type Comment from "@/types/Comment";
 import { computed, ref, type PropType } from "vue";
 import UnicodeIcon from "@/components/UnicodeIcon.vue";
-import CommentEditor from "./CommentEditor.vue";
-import markdownToHtml from "@/lib/markdown-utils";
+import CommentBody from "@/components/CommentBody.vue";
+import CommentEditor from "@/components/CommentEditor.vue";
 import { humanTimeAgo } from "@/lib/date-utils";
 import { isA } from "@/lib/validators";
 import { useCommentsStore } from "@/stores/comments";
@@ -105,7 +104,6 @@ const replying = ref(false);
 
 const id = computed(() => parseInt(props.comment.id, 10));
 const username = computed(() => props.comment.attributes.authorUsername);
-const bodyHtml = computed(() => markdownToHtml(props.comment.attributes.body));
 const commentVoteState = computed(() => commentsStore.commentVoteState(id.value));
 const upvoted = computed(() => commentVoteState.value === true); // `commentVoteState.value` can be `null`
 const downvoted = computed(() => commentVoteState.value === false); // `commentVoteState.value` can be `null`
@@ -133,13 +131,8 @@ const onUpvoteClicked = () => {
     commentsStore.deleteCommentVote(props.comment.id);
   } else {
     // User is upvoting the comment
-    // commentsStore.upvoteComment(props.comment.id).then((commentVote) => {
-    //   upvoted.value = commentVote.attributes.upvote;
-    // });
     commentsStore.upvoteComment(props.comment.id);
   }
-
-  // downvoted.value = false;
 };
 
 const onDownvoteClicked = () => {
@@ -148,14 +141,16 @@ const onDownvoteClicked = () => {
     commentsStore.deleteCommentVote(props.comment.id);
   } else {
     // User is upvoting the comment
-    // commentsStore.downvoteComment(props.comment.id).then((commentVote) => {
-    //   downvoted.value = commentVote.attributes.upvote;
-    // });
     commentsStore.downvoteComment(props.comment.id);
   }
-
-  // upvoted.value = false;
 };
+
+// const onToggleReply = () => {
+//   const cancelingReply = replying.value;
+//   replying.value = !replying.value;
+
+//   if (cancelingReply) nextTick(() => {  })
+// };
 </script>
 
 <style lang="scss">
