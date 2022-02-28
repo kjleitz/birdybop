@@ -49,4 +49,4 @@ gem "sidekiq", "~> 6.4"
 
 gem "faraday", "~> 2.1"
 
-gem "nokogiri", "~> 1.12"
+gem "nokogiri", "~> 1.13"
