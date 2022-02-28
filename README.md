@@ -11,7 +11,11 @@ git clone https://github.com/kjleitz/birdybop
 ### Install dependencies for running the application
 
 - Install [Docker](https://docs.docker.com/get-docker/) and [`docker-compose`](https://docs.docker.com/compose/install/).
+
+If you are a deployer, then...
+
 - Install [Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli)
+- Install the [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli#install-the-heroku-cli)
 
 ### Install dependencies for local development
 
@@ -177,7 +181,7 @@ I mean, go ham.
 
 - Do not use `@ts-ignore`
 - Please fix warnings and errors reported by ESLint and Rubocop
-- If you modify the Terraform file(s), run `terraform fmt` to format them, and `terraform validate` to make sure they're valid
+- If you modify the Terraform file(s), run `terraform fmt -recursive` to format them, and `terraform validate` to make sure they're valid
 - Run `bin/check` to run the lints and tests for everything in one go
 
 ## TODO
