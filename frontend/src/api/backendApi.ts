@@ -2,9 +2,7 @@ import BirdybopError from "@/lib/BirdybopError";
 import type JsonApi from "@/types/JsonApi";
 import axios, { Axios } from "axios";
 
-const {
-  VITE_BACKEND_BASE_URL = "http://localhost:3000",
-} = import.meta.env;
+const VITE_BACKEND_BASE_URL = import.meta.env.VITE_BACKEND_BASE_URL || (import.meta.env.PROD ? "https://api.birdybop.com" : "http://localhost:3000");
 
 class BackendApi {
   public axiosInstance: Axios;

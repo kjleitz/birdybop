@@ -87,7 +87,13 @@ test:
 # for a full overview on how database connection configuration can be specified.
 #
 production:
-  <<: *default
-  # database: birdybop_production
-  # username: birdybop
-  # password: <%= ENV['BIRDYBOP_DATABASE_PASSWORD'] %>
+  # <<: *default
+  # # database: birdybop_production
+  # # username: birdybop
+  # # password: <%= ENV['BIRDYBOP_DATABASE_PASSWORD'] %>
+  adapter: postgresql
+  database: birdybop_production
+  encoding: unicode
+  password: <%= ENV['BIRDYBOP_DATABASE_PASSWORD'] %>
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  username: birdybop

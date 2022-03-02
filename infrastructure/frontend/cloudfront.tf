@@ -1,6 +1,29 @@
 # Lots of help from this article: https://www.alexhyett.com/terraform-s3-static-website-hosting
 # (cached: https://web.archive.org/web/20220222160047/https://www.alexhyett.com/terraform-s3-static-website-hosting)
 
+# Cloudfront "Managed-CachingDisabled" cache policy ("Cache policy name" column
+# under the "Behaviors" tab in the Cloudfront distribution for www.birdybop.com)
+resource "aws_cloudfront_cache_policy" "caching_disabled_policy" {
+  name = "caching_disabled_policy_${replace(var.domain_name, "/[^A-Za-z0-9]/", "_")}"
+  min_ttl                = 0
+  default_ttl            = 0
+  max_ttl                = 0
+
+  parameters_in_cache_key_and_forwarded_to_origin {
+    cookies_config {
+      cookie_behavior = "none"
+    }
+
+    headers_config {
+      header_behavior = "none"
+    }
+
+    query_strings_config {
+      query_string_behavior = "none"
+    }
+  }
+}
+
 # Cloudfront distribution for main s3 site.
 resource "aws_cloudfront_distribution" "www_s3_distribution" {
   origin {
@@ -40,18 +63,20 @@ resource "aws_cloudfront_distribution" "www_s3_distribution" {
     cached_methods   = ["GET", "HEAD"]
     target_origin_id = "S3-www.${var.bucket_name}"
 
-    forwarded_values {
-      query_string = false
+    cache_policy_id = aws_cloudfront_cache_policy.caching_disabled_policy.id
 
-      cookies {
-        forward = "none"
-      }
-    }
+    # forwarded_values {
+    #   query_string = false
+
+    #   cookies {
+    #     forward = "none"
+    #   }
+    # }
 
     viewer_protocol_policy = "redirect-to-https"
-    min_ttl                = 31536000
-    default_ttl            = 31536000
-    max_ttl                = 31536000
+    min_ttl                = 0
+    default_ttl            = 0
+    max_ttl                = 0
     compress               = true
   }
 
