@@ -4,7 +4,7 @@ class SearchesController < ApplicationController
 
   # TODO: error handling
   def search
-    base_url = ENV.fetch("SEARCHER_BASE_URL") { "http://searx:8080" }
+    base_url = ENV.fetch("SEARCHER_BASE_URL") { Rails.env.production? ? "https://birdybop-searx.herokuapp.com" : "http://searx:8080" }
     url = URI.join(base_url, "search")
     resp = Faraday.get(
       url,
