@@ -92,7 +92,7 @@ production:
   # # username: birdybop
   # # password: <%= ENV['BIRDYBOP_DATABASE_PASSWORD'] %>
   adapter: postgresql
-  database: birdybop_production
+  database: birdybop-production
   encoding: unicode
   password: <%= ENV['BIRDYBOP_DATABASE_PASSWORD'] %>
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
