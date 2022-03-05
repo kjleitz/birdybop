@@ -105,6 +105,7 @@ const glyphStyle = computed((): StyleValue => {
     height: 1em;
     line-height: 1em;
     text-align: center;
+    font-family: Arial;
   }
 }
 </style>

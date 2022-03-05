@@ -8,7 +8,7 @@
         name="search"
         placeholder="Search"
         class="search-input"
-        @keydown.prevent.exact.enter="submitSearch"
+        @keydown.prevent.enter="submitSearch"
       />
       <button
         :disabled="searching"

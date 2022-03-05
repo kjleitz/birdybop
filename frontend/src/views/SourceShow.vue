@@ -46,6 +46,7 @@ import { useSourcesStore } from "@/stores/sources";
 import { useCollectionsStore } from "@/stores/collections";
 import { storeToRefs } from "pinia";
 import { useCommentsStore } from "@/stores/comments";
+import { promiseDebouncer } from "@/lib/promise-utils";
 
 const sourcesStore = useSourcesStore();
 const commentsStore = useCommentsStore();
@@ -78,11 +79,21 @@ watch([loadingSource, loadingComments], ([newLoadingSource, newLoadingComments],
   alreadyLoaded.value = true;
 });
 
+const fetchSource = promiseDebouncer((sourcePath: string): Promise<void> => {
+  return sourcesStore.fetchSource(sourcePath);
+});
+
+const fetchComments = promiseDebouncer((sourcePath: string): Promise<void> => {
+  return commentsStore.fetchComments(sourcePath);
+});
+
 onMounted(() => {
+  const path = sourcePath.value;
+  alreadyLoaded.value = false;
   if (!source.value) {
-    alreadyLoaded.value = false;
-    const path = sourcePath.value;
-    sourcesStore.fetchSource(path).then(() => commentsStore.fetchComments(path));
+    fetchSource(path).then(() => fetchComments(path));
+  } else {
+    fetchComments(path);
   }
 });
 
@@ -91,12 +102,11 @@ onBeforeRouteUpdate((to, _from, next) => {
   const source = sourceForPath(sourcePath);
 
   if (!source) {
-    sourcesStore
-      .fetchSource(sourcePath)
-      .then(() => commentsStore.fetchComments(sourcePath))
+    fetchSource(sourcePath)
+      .then(() => fetchComments(sourcePath))
       .then(() => next());
   } else {
-    next();
+    fetchComments(sourcePath).then(() => next());
   }
 });
 </script>
