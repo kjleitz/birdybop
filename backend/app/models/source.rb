@@ -12,16 +12,21 @@ class Source < ApplicationRecord
 
   class << self
     def sanitize_path(path)
-      path
+      raw_domain, sub_path = path
         .to_s # could be `nil` or some other non-String, if I'm being paranoid
         .strip # could have leading or trailing whitespace
         .split("\n") # could be multi-line...
         .first # ...so, just take the first line
         .downcase # all lower-case... might be case-sensitive IRL but shouldn't be for matching
         .gsub(/[?#].*\z/, "") # remove query params and hash from the URL
-        .gsub(/\/+\z/, "") # remove trailing slash(es) (shouldn't be multiple, but... paranoia)
         .gsub(/\A.*:\/\//, "") # remove protocol (even repeated protocol strings)
-        .gsub(/\A((www|m)\.)+/, "") # remove "www" and "m" subdomains (others should be kept)
+        .split("/", 2)
+
+      domain = raw_domain
+        .gsub(/\b(www|m)\./, "") # remove "www" and "m" subdomains (others should be kept)
+
+      "#{domain}/#{sub_path}"
+        .gsub(/\/+\z/, "") # remove trailing slash(es) (shouldn't be multiple, but... paranoia)
     end
 
     # e.g., "foo.com/bar/baz" => "foo.com"
@@ -50,7 +55,7 @@ class Source < ApplicationRecord
 
     # e.g., "foo.com/bar/baz" => ["foo.com", "bar", "baz"]
     def path_segments(path)
-      path.split("/")
+      sanitize_path(path).split("/")
     end
 
     # Like `parent_sources` except it also includes the child source
@@ -60,14 +65,15 @@ class Source < ApplicationRecord
 
     # e.g., "foo.com/bar/baz" => "/bar/baz"
     def sub_path(path)
-      path.delete_prefix(domain(path))
+      sanitize_path(path).delete_prefix(domain(path))
     end
 
     def uri(path)
       URI::HTTPS.build(host: domain(path), path: sub_path(path))
     end
 
-    def fetch_page_info_for_path(path, bust_cache: false)
+    def fetch_page_info_for_path(raw_path, bust_cache: false)
+      path = sanitize_path(raw_path)
       key = "source:#{Utils.encode_base64(path)}:page_info"
       Rails.cache.delete(key) if bust_cache
       Rails.cache.fetch(key, expires_in: 10.minutes) do
@@ -76,10 +82,15 @@ class Source < ApplicationRecord
         faraday = Faraday.new { |f| f.use BirdybopFaradayMiddleware::FollowRedirects }
         response = faraday.get(Source.uri(path))
         document = Nokogiri::HTML(response.body)
-        description = document.css('meta[name="description"]').first&.text || ""
+        desc_meta = document.css('meta[name="description"]').first
+        description = desc_meta&.content.presence || desc_meta&.text.presence || ""
+        title = document.title.presence || begin
+          title_meta = document.css('meta[name="og:title"]').first
+          title_meta&.content.presence || title_meta&.text.presence || path.gsub("/", "-").titleize
+        end
 
         {
-          title: document.title,
+          title: title,
           description: description,
         }
       rescue Faraday::ConnectionFailed => _e
