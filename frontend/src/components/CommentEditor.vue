@@ -53,6 +53,11 @@ const props = defineProps({
     required: true,
   },
 
+  sourceUrl: {
+    type: String,
+    default: "",
+  },
+
   parentId: {
     type: Number as PropType<number | null>,
     default: null,
@@ -94,7 +99,11 @@ onMounted(() => {
 });
 
 const onSubmit = (): void => {
-  commentsStore.createComment(props.sourcePath, commentCreateParams.value).then(() => {
+  commentsStore.createComment(
+    props.sourcePath,
+    commentCreateParams.value,
+    props.sourceUrl,
+  ).then(() => {
     emit("saved", true);
     form.value.body = "";
   }).catch((error) => {

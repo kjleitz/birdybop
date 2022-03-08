@@ -5,13 +5,18 @@
       <template v-else>
         <section v-if="source" class="source-info">
           <!-- <span>{{ source.id || "(not persisted)" }}</span> -->
-          <a :href="source.attributes.path" class="source-title">{{ source.attributes.name }}</a>
-          <a :href="source.attributes.path" class="source-url">{{ source.attributes.path }}</a>
+          <a :href="sourceUrl" class="source-title">{{ source.attributes.name }}</a>
+          <a :href="sourceUrl" class="source-url">{{ sourceUrl }}</a>
           <p class="source-text">{{ source.attributes.description || "(no description)" }}</p>
+
+          <SourcePathSegmentLinks
+            :sanitized-path="sourcePath"
+            :active-path="sourcePath"
+          />
         </section>
 
         <section class="comments-section">
-          <CommentEditor :source-path="sourcePath" :cancelable="false" />
+          <CommentEditor :source-path="sourcePath" :source-url="sourceUrl" :cancelable="false" />
 
           <!-- TODO: sorting and filters go here -->
 
@@ -33,6 +38,20 @@ import { decodeUriComponentBase64 } from "@/lib/encoding-utils";
 const sourcePathFromRoute = (route: RouteLocationNormalized): string => {
   return decodeUriComponentBase64(route.params.encodedSourcePath as string);
 };
+
+const defaultSourceUrlFromRoute = (route: RouteLocationNormalized): string => {
+  // We'll just assume the site supports HTTPS, and that they have the proper
+  // redirects in place in case we've stripped `www.` and/or `m.` from the
+  // subdomains... :grimacing: :sweat_smile:
+  return `https://${sourcePathFromRoute(route)}`;
+};
+
+const sourceUrlFromRoute = (route: RouteLocationNormalized): string => {
+  const { encodedSourceUrl } = route.query;
+  return encodedSourceUrl
+    ? decodeUriComponentBase64(encodedSourceUrl as string)
+    : defaultSourceUrlFromRoute(route);
+};
 </script>
 
 <script setup lang="ts">
@@ -47,6 +66,7 @@ import { useCollectionsStore } from "@/stores/collections";
 import { storeToRefs } from "pinia";
 import { useCommentsStore } from "@/stores/comments";
 import { promiseDebouncer } from "@/lib/promise-utils";
+import SourcePathSegmentLinks from "../components/SourcePathSegmentLinks.vue";
 
 const sourcesStore = useSourcesStore();
 const commentsStore = useCommentsStore();
@@ -62,6 +82,7 @@ const alreadyLoaded = ref(false);
 const { loadingSource } = storeToRefs(sourcesStore);
 const { loadingComments } = storeToRefs(commentsStore);
 const sourcePath = computed(() => sourcePathFromRoute(route));
+const sourceUrl = computed(() => sourceUrlFromRoute(route));
 const source = computed(() => sourceForPath(sourcePath.value));
 const comments = computed(() => collectionsStore.collections.comment.filter((comment) => !comment.attributes.parentId));
 // const firstComment = computed(() => comments.value[0]);
@@ -79,8 +100,8 @@ watch([loadingSource, loadingComments], ([newLoadingSource, newLoadingComments],
   alreadyLoaded.value = true;
 });
 
-const fetchSource = promiseDebouncer((sourcePath: string): Promise<void> => {
-  return sourcesStore.fetchSource(sourcePath);
+const fetchSource = promiseDebouncer((sourcePath: string, sourceUrl?: string): Promise<void> => {
+  return sourcesStore.fetchSource(sourcePath, sourceUrl);
 });
 
 const fetchComments = promiseDebouncer((sourcePath: string): Promise<void> => {
@@ -89,9 +110,10 @@ const fetchComments = promiseDebouncer((sourcePath: string): Promise<void> => {
 
 onMounted(() => {
   const path = sourcePath.value;
+  const url = sourceUrl.value;
   alreadyLoaded.value = false;
   if (!source.value) {
-    fetchSource(path).then(() => fetchComments(path));
+    fetchSource(path, url).then(() => fetchComments(path));
   } else {
     fetchComments(path);
   }
@@ -99,10 +121,11 @@ onMounted(() => {
 
 onBeforeRouteUpdate((to, _from, next) => {
   const sourcePath = sourcePathFromRoute(to);
+  const sourceUrl = sourceUrlFromRoute(to);
   const source = sourceForPath(sourcePath);
 
   if (!source) {
-    fetchSource(sourcePath)
+    fetchSource(sourcePath, sourceUrl)
       .then(() => fetchComments(sourcePath))
       .then(() => next());
   } else {

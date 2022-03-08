@@ -13,8 +13,7 @@ h1.logo {
 
   a {
     text-decoration: none;
-    color: inherit;
-    // color: var(--accent);
+    color: var(--text);
   }
 }
 </style>

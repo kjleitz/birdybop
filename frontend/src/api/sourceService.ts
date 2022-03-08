@@ -22,9 +22,13 @@ export function fetchSources(): Promise<Source[]> {
     .then(({ data }) => data);
 }
 
-export function fetchSource(path: string): Promise<Source> {
+export function fetchSource(encodedPath: string, encodedUrl?: string): Promise<Source> {
+  const target = encodedUrl
+    ? `/sources/${encodedPath}?source_url=${encodedUrl}`
+    : `/sources/${encodedPath}`;
+
   return backendApi
-    .get<SourceItemResponse>(`/sources/${path}`)
+    .get<SourceItemResponse>(target)
     .then(({ data }) => data);
 }
 

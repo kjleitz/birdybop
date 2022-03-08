@@ -72,22 +72,27 @@ class Source < ApplicationRecord
       URI::HTTPS.build(host: domain(path), path: sub_path(path))
     end
 
-    def fetch_page_info_for_path(raw_path, bust_cache: false)
-      path = sanitize_path(raw_path)
-      key = "source:#{Utils.encode_base64(path)}:page_info"
+    def fetch_page_info_for_url(url, bust_cache: false)
+      key = "source:#{Utils.encode_base64(url)}:page_info"
       Rails.cache.delete(key) if bust_cache
-      Rails.cache.fetch(key, expires_in: 10.minutes) do
+      # Rails.cache.fetch(key, expires_in: 10.minutes) do
+      Rails.cache.fetch(key, expires_in: (0.01).minutes) do
         # TODO: Is this inefficient? Should I be using a single instance
         #       globally or something?
         faraday = Faraday.new { |f| f.use BirdybopFaradayMiddleware::FollowRedirects }
-        response = faraday.get(Source.uri(path))
+        response = faraday.get(url)
         document = Nokogiri::HTML(response.body)
         desc_meta = document.css('meta[name="description"]').first
         description = desc_meta&.content.presence || desc_meta&.text.presence || ""
+
+        # TODO: Come on, this is lazy.
         title = document.title.presence || begin
           title_meta = document.css('meta[name="og:title"]').first
-          title_meta&.content.presence || title_meta&.text.presence || path.gsub("/", "-").titleize
-        end
+          title_meta&.content.presence || title_meta&.text.presence
+        end || begin
+          h1 = document.css('h1').first
+          h1&.text.presence
+        end || sanitize_path(url).gsub("/", "-").titleize
 
         {
           title: title,
@@ -95,7 +100,7 @@ class Source < ApplicationRecord
         }
       rescue Faraday::ConnectionFailed => _e
         {
-          title: path.gsub("/", "-").titleize,
+          title: sanitize_path(url).gsub("/", "-").titleize,
           description: "",
         }
       end

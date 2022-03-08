@@ -23,7 +23,9 @@ class SourcesController < ApplicationController
       source_for_path = Source.where(path: path).first_or_initialize
 
       if source_for_path.new_record?
-        page_info = Source.fetch_page_info_for_path(path)
+        encoded_source_url = params[:source_url]
+        url = Utils.decode_uri_component_base64(encoded_source_url) if encoded_source_url.present?
+        page_info = Source.fetch_page_info_for_url(url || Source.uri(path).to_s)
         source_for_path.name = page_info[:title]
         source_for_path.description = page_info[:description]
         source_for_path.submitter = current_user

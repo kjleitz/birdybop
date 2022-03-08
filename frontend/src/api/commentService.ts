@@ -16,9 +16,13 @@ export interface CommentVoteCreateParams {
   upvote: boolean;
 }
 
-export function createComment(sourcePath: string, params: CommentCreateParams): Promise<Comment> {
+export function createComment(encodedSourcePath: string, comment: CommentCreateParams, encodedUrl?: string): Promise<Comment> {
+  const target = encodedUrl
+    ? `/sources/${encodedSourcePath}/comments?source_url=${encodedUrl}`
+    : `/sources/${encodedSourcePath}/comments`;
+
   return backendApi
-    .post<CommentItemResponse>(`/sources/${sourcePath}/comments`, { comment: params })
+    .post<CommentItemResponse>(target, { comment })
     .then(({ data }) => data);
 }
 
@@ -34,9 +38,9 @@ export function fetchComment(id: number | string): Promise<Comment> {
     .then(({ data }) => data);
 }
 
-export function updateComment(id: number | string, params: CommentUpdateParams): Promise<Comment> {
+export function updateComment(id: number | string, comment: CommentUpdateParams): Promise<Comment> {
   return backendApi
-    .patch<CommentItemResponse>(`/comments/${id}`, { comment: params })
+    .patch<CommentItemResponse>(`/comments/${id}`, { comment })
     .then(({ data }) => data);
 }
 
@@ -48,9 +52,9 @@ export function deleteCommentVote(commentId: number | string): Promise<void> {
   return backendApi.delete(`/comments/${commentId}/comment_votes`);
 }
 
-export function createCommentVote(commentId: number | string, params: CommentVoteCreateParams): Promise<CommentVote> {
+export function createCommentVote(commentId: number | string, vote: CommentVoteCreateParams): Promise<CommentVote> {
   // TODO: Return type (`CommentVoteItemResponse`)
   return backendApi
-    .post<CommentVoteItemResponse>(`/comments/${commentId}/comment_votes`, { comment_vote: params })
+    .post<CommentVoteItemResponse>(`/comments/${commentId}/comment_votes`, { comment_vote: vote })
     .then(({ data }) => data);
 }

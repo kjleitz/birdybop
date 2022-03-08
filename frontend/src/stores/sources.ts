@@ -33,11 +33,12 @@ export const useSourcesStore = defineStore("sources", {
       });
     },
 
-    fetchSource(path: string): Promise<void> {
+    fetchSource(path: string, fullUrl?: string): Promise<void> {
       this.setLoadingSource(true);
       const encodedSourcePath = encodeUriComponentBase64(path);
+      const encodedSourceUrl = fullUrl ? encodeUriComponentBase64(fullUrl) : "";
       const collectionsStore = useCollectionsStore();
-      return fetchSource(encodedSourcePath).then((source) => {
+      return fetchSource(encodedSourcePath, encodedSourceUrl).then((source) => {
         collectionsStore.addToCollection(source, source => source.attributes.path);
       }).finally(() => {
         this.setLoadingSource(false);

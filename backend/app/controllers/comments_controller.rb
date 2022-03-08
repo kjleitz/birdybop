@@ -50,8 +50,10 @@ class CommentsController < ApplicationController
       render_unprocessable_entity "Source ID must be encoded source path" and return if Utils.numeric?(params[:source_id])
 
       encoded_source_path = params[:source_id]
+      encoded_source_url = params[:source_url]
       path = Utils.decode_uri_component_base64(encoded_source_path)
-      page_info = Source.fetch_page_info_for_path(path)
+      url = Utils.decode_uri_component_base64(encoded_source_url) if encoded_source_url.present?
+      page_info = Source.fetch_page_info_for_url(url || Source.uri(path).to_s)
       title = page_info[:title]
       title = "#{title} (#{SecureRandom.hex})" if Source.where(name: title).exists?
       description = page_info[:description]

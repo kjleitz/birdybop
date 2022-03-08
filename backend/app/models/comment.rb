@@ -24,6 +24,8 @@ class Comment < ApplicationRecord
     def update_laplace_rank!(comment_id)
       # Only grab the columns we need...
       comment_attrs = Comment.where(id: comment_id).select(:upvote_count, :downvote_count, :laplace_rank).first
+      return if comment_attrs.blank?
+
       new_rank = Utils.laplace_rank(comment_attrs.upvote_count, comment_attrs.downvote_count)
       return if new_rank == comment_attrs.laplace_rank
 

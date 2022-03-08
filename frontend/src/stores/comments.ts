@@ -86,14 +86,15 @@ export const useCommentsStore = defineStore("comments", {
       });
     },
 
-    createComment(sourcePath: string, params: CommentCreateParams): Promise<void> {
+    createComment(sourcePath: string, params: CommentCreateParams, fullUrl?: string): Promise<void> {
       this.setCreatingComment(true);
       const collectionsStore = useCollectionsStore();
       const userStore = useUserStore();
       const sourcesStore = useSourcesStore();
       const encodedSourcePath = encodeUriComponentBase64(sourcePath);
+      const encodedSourceUrl = fullUrl ? encodeUriComponentBase64(fullUrl) : "";
 
-      return createComment(encodedSourcePath, params).then((comment) => {
+      return createComment(encodedSourcePath, params, encodedSourceUrl).then((comment) => {
         comment.attributes.karma += 1; // fake an initial upvote
         comment.attributes.upvoteCount += 1; // fake an initial upvote
         comment.attributes.laplaceRank = 1; // put it at the top of the list
@@ -109,7 +110,7 @@ export const useCommentsStore = defineStore("comments", {
 
         // Fetch the source, because it may have just been created, and/or it
         // may be updated with new info.
-        return sourcesStore.fetchSource(sourcePath);
+        return sourcesStore.fetchSource(sourcePath, fullUrl);
       }).finally(() => {
         this.setCreatingComment(false);
       });

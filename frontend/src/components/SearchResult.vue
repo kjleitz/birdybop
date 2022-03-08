@@ -3,55 +3,47 @@
     <a :href="result.attributes.url" class="search-result-title">{{ result.attributes.title }}</a>
     <a :href="result.attributes.url" class="search-result-url">{{ result.attributes.url }}</a>
     <p class="search-result-text">{{ result.attributes.content || "(no description)" }}</p>
-    <nav class="source-links">
-      <span v-for="([segment, source], index) in segmentSources" :key="index" class="source-link-couplet">
-        <span class="path-segment source-link-separator">
-          <!-- <template v-if="index === 0">&#x21B3;</template> -->
-          <template v-if="index === 0">&rdsh;</template>
-          <template v-else>/</template>
-        </span>
-        <router-link
-          v-if="source"
-          :to="{ name: 'SourceShow', params: { encodedSourcePath: encodeUriComponentBase64(source.attributes.path) } }"
-          class="path-segment source-link"
-        >
-          ({{ source.attributes.karma }}) {{ segment }}
-        </router-link>
-        <span v-else class="path-segment">
-          {{ segment }}
-        </span>
-      </span>
-    </nav>
+    <div class="view-discussion">
+      <router-link :to="sourceDiscussionLink" class="view-discussion-link">
+        View discussion
+      </router-link>
+    </div>
+    <SourcePathSegmentLinks
+      :sanitized-path="result.attributes.sanitizedPath"
+      class="segment-links"
+    />
   </article>
 </template>
 
 <script setup lang="ts">
-import type SearchResult from "@/types/SearxResult";
-import type Source from "@/types/Source";
+import type SearxResult from "@/types/SearxResult";
+import SourcePathSegmentLinks from "@/components/SourcePathSegmentLinks.vue";
 import { encodeUriComponentBase64 } from "@/lib/encoding-utils";
 import { computed, type PropType } from "vue";
-import { useRouter } from "vue-router";
-import { useCollectionsStore } from "@/stores/collections";
+import { useRouter, type RouteLocationRaw } from "vue-router";
 
 const router = useRouter();
 
 const props = defineProps({
   result: {
-    type: Object as PropType<SearchResult>,
+    type: Object as PropType<SearxResult>,
     required: true,
   },
 });
 
-const segmentSources = computed((): [string, Source | undefined][] => {
-  const store = useCollectionsStore();
-
-  return props.result.attributes.pathSegments.map((segment, index) => {
-    const path = props.result.attributes.pathFamily[index];
-    // TODO: Something else, this is inefficient
-    const segmentSource = store.collections.source.find((source) => source.attributes.path === path);
-    return [decodeURIComponent(segment), segmentSource];
-  });
+const encodedSourcePath = computed(() => {
+  return encodeUriComponentBase64(props.result.attributes.sanitizedPath);
 });
+
+const encodedSourceUrl = computed(() => {
+  return encodeUriComponentBase64(props.result.attributes.url);
+});
+
+const sourceDiscussionLink = computed<RouteLocationRaw>(() => ({
+  name: "SourceShow",
+  params: { encodedSourcePath: encodedSourcePath.value },
+  query: { encodedSourceUrl: encodedSourceUrl.value },
+}));
 
 const onClickResult = (event: MouseEvent): void => {
   // If they clicked a link, let it go.
@@ -59,8 +51,7 @@ const onClickResult = (event: MouseEvent): void => {
   if (target && `${target.tagName}`.toLowerCase() === "a") return;
 
   // Otherwise, go to the discussion page.
-  const encodedSourcePath = encodeUriComponentBase64(props.result.attributes.sanitizedPath);
-  router.push({ name: 'SourceShow', params: { encodedSourcePath } });
+  router.push(sourceDiscussionLink.value);
 };
 </script>
 
@@ -78,7 +69,11 @@ const onClickResult = (event: MouseEvent): void => {
   width: 100%;
   border: 1px solid transparent;
   border-radius: var(--border-radius);
-  padding: 0.25rem 0;
+  padding: 0.25rem 1rem;
+
+  @include on-mobile {
+    padding: 0.25rem 0rem;
+  }
 
   @include on-true-hover {
     border: 1px solid var(--border);
@@ -106,49 +101,58 @@ const onClickResult = (event: MouseEvent): void => {
     margin: 0.5rem 0 0.25rem;
   }
 
-  .source-links {
-    max-width: 100%;
-    margin-bottom: 1rem;
-    line-height: 1.25rem;
-    padding: 0;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    flex-wrap: wrap;
-
-    .source-link-couplet {
-      display: inline-block;
-      white-space: nowrap;
-      margin-right: 0.25rem;
-      color: var(--text-light);
-      max-width: 100%;
-      overflow: hidden;
-      text-overflow: ellipsis;
-
-      &:last-of-type {
-        margin-right: 0;
-      }
-
-      .source-link {
-        color: var(--accent);
-        border: 0;
-        margin: 0;
-        padding: 0;
-      }
-
-      .path-segment {
-        display: inline-block;
-        font-size: 0.875rem;
-      }
-
-      .path-segment + .path-segment {
-        margin-left: 0.25rem;
-      }
-
-      .source-link-separator {
-        font-family: 'Courier New', Courier, monospace;
-      }
-    }
+  .view-discussion {
+    font-size: small;
   }
+
+  .segment-links {
+    font-size: small;
+  }
+
+  // .source-links {
+  //   max-width: 100%;
+  //   margin-bottom: 1rem;
+  //   line-height: 1.25rem;
+  //   padding: 0;
+  //   display: flex;
+  //   justify-content: flex-start;
+  //   align-items: center;
+  //   flex-wrap: wrap;
+  //   font-size: small;
+
+  //   .source-link-couplet {
+  //     display: inline-block;
+  //     white-space: nowrap;
+  //     margin-right: 0.25rem;
+  //     color: var(--text-light);
+  //     max-width: 100%;
+  //     overflow: hidden;
+  //     text-overflow: ellipsis;
+
+  //     &:last-of-type {
+  //       margin-right: 0;
+  //     }
+
+  //     .source-link {
+  //       color: var(--accent);
+  //       border: 0;
+  //       margin: 0;
+  //       padding: 0;
+  //     }
+
+  //     .path-segment {
+  //       display: inline-block;
+  //       // font-size: 0.875rem;
+  //     }
+
+  //     .path-segment + .path-segment {
+  //       margin-left: 0.25rem;
+  //     }
+
+  //     .source-link-separator {
+  //       font-family: 'Courier New', Courier, monospace;
+  //     }
+  //   }
+  // }
 }
 </style>

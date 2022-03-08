@@ -26,12 +26,16 @@ const GLYPHS: Record<string, Glyph> = {
   "arrowhead": "&#x2B9D;",
   "bullet": "&bull;",
   "caret": "&#x2303;",
-  "fat-arrow": "&#129093;",
+  // "fat-arrow": "&#129093;",
+  // "fat-arrow": "&#x2B06;",
+  "fat-arrow": { code: "&#x2B95;", orientation: "right" },
   "interpunct": "&middot;",
   "magnifying-glass": "&#x26B2;",
   "triangle-lg": "&#9650;",
   // "triangle-lg": "&#25B2;",
-  "triangle-sm": { code: "&#x1F892;", orientation: "right" },
+  // "triangle-sm": { code: "&#x1F892;", orientation: "right" },
+  "triangle-sm": { code: "&#x2023;", orientation: "right" },
+  "return-reverse": "&rdsh;",
 };
 </script>
 
